@@ -2,6 +2,8 @@ import React from 'react';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
+import { Header } from '@/components/Header';
+import { ThemeProvider } from '@/components/theme-provider';
 import { cn } from '@/lib/utils';
 
 import './globals.css';
@@ -22,12 +24,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={cn(`${inter.className} antialiased`)}
-        suppressHydrationWarning
+        className={cn(
+          `${inter.className} grid min-h-screen w-full antialiased`
+        )}
       >
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Header />
+          <aside></aside>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
