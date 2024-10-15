@@ -12,8 +12,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Your metadata title',
-  description: 'Your metadata description',
+  title: 'Task Manager App',
+  description: 'Your time management assistant',
 };
 
 export default function RootLayout({
