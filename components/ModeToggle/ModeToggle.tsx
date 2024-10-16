@@ -3,13 +3,13 @@
 import * as React from 'react';
 import { useTheme } from 'next-themes';
 
-import { Button } from '@/components/ui/button';
 import {
+  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@/components/ui';
 import { MoonIcon, SunIcon } from '@radix-ui/react-icons';
 
 export function ModeToggle() {
