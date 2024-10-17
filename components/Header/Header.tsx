@@ -3,12 +3,15 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { ExitIcon } from '@radix-ui/react-icons';
+
+import { MobileNav } from '../MobileNav';
 import { ModeToggle } from '../ModeToggle';
-import { buttonVariants } from '../ui/button';
+import { Button, buttonVariants } from '../ui';
 
 export function Header() {
   return (
-    <header className="flex h-16 w-full items-center justify-between border-b px-8 sm:px-16">
+    <header className="flex h-16 w-full items-center justify-between border-b px-6 md:px-10">
       <Link href="/" className="p-5 pl-0">
         <Image
           className="dark:invert"
@@ -20,13 +23,17 @@ export function Header() {
           style={{ height: 'auto' }}
         />
       </Link>
-      <div className="flex items-center gap-8">
-        {/* <div className="flex gap-6"> */}
+      <div className="flex items-center gap-6">
         <Link href="/sign-in" className={buttonVariants({ variant: 'ghost' })}>
           Sign in
         </Link>
-        {/* </div> */}
-        <ModeToggle />
+        <div className="flex gap-3 lg:gap-4">
+          <ModeToggle />
+          <Button variant="outline" size="icon">
+            <ExitIcon />
+          </Button>
+          <MobileNav />
+        </div>
       </div>
     </header>
   );

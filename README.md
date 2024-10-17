@@ -33,11 +33,11 @@ Task Manager is a full-featured task management application built with modern we
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/your-username/task-manager-app.git
+git clone https://github.com/Zub04ek/task-manager.git
 ```
 2. Navigate to the project directory:
 ```bash
-cd task-manager-app
+cd task-manager
 ```
 3. Install dependencies:
 ```bash
