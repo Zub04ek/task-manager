@@ -22,7 +22,7 @@ export function Header() {
       </Link>
       <div className="flex items-center gap-8">
         {/* <div className="flex gap-6"> */}
-        <Link href="/sign-in" className={buttonVariants()}>
+        <Link href="/sign-in" className={buttonVariants({ variant: 'ghost' })}>
           Sign in
         </Link>
         {/* </div> */}
