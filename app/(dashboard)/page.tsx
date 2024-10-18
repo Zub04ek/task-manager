@@ -78,9 +78,9 @@ export default function Home() {
         return (
           <div
             key={index}
-            className="grid grid-rows-[36px_1fr] gap-6 rounded-xl bg-accent p-6"
+            className="grid grid-rows-[36px_1fr] gap-6 rounded-xl bg-accent py-6 pl-6 pr-3"
           >
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between pr-3">
               <span className="font-semibold">{group.title}</span>
               <div className="flex gap-1">
                 <Button
@@ -99,7 +99,7 @@ export default function Home() {
                 </Button>
               </div>
             </div>
-            <ul className="flex h-[667px] flex-col gap-6 overflow-y-auto">
+            <ul className="flex h-[667px] flex-col gap-6 overflow-y-auto scroll-smooth pr-3">
               {todos.map((todo) => {
                 return <TaskCard key={todo.id} task={todo} />;
               })}
