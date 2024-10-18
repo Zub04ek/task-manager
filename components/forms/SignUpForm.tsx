@@ -53,7 +53,7 @@ export function SignUpForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-5 justify-self-center"
+        className="w-full space-y-5 justify-self-center"
       >
         <FormField
           control={form.control}

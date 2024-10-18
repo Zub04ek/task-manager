@@ -1,53 +1,25 @@
 'use client';
 
-import React, { ReactElement } from 'react';
-import Link, { LinkProps } from 'next/link';
-import { usePathname } from 'next/navigation';
+import { cn } from '@/lib/utils';
+import menu from '@/utils/menu';
 
-import { buttonVariants } from '../ui';
+import { NavLink } from '../NavLink';
 
-interface NavLinkProps extends LinkProps {
-  href: string;
-  children: ReactElement;
+interface NavProps {
+  className?: string;
 }
 
-const NavLink = ({ href, children }: NavLinkProps) => {
-  const pathname = usePathname();
-  const isActive = href === pathname;
-
+export function Sidebar({ className, ...props }: NavProps) {
   return (
-    <Link
-      href={href}
-      className={`w-full ${buttonVariants({ variant: 'ghost' })} ${isActive ? 'bg-accent' : 'bg-transparent'}`}
-      style={{ justifyContent: 'flex-start' }}
-    >
-      {children}
-    </Link>
-  );
-};
-
-export function Sidebar() {
-  return (
-    <div className="flex h-full p-6">
-      <nav className="min-w-full">
-        <ul className="flex flex-col">
-          <li>
-            <NavLink href="/">
-              <span>Active</span>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink href="/planned">
-              <span>To do</span>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink href="/completed">
-              <span>Completed</span>
-            </NavLink>
-          </li>
-        </ul>
-      </nav>
-    </div>
+    <nav className={cn('flex min-w-full flex-col gap-4', className)}>
+      {menu.map(({ id, link, icon, title }) => {
+        return (
+          <NavLink key={id} href={link} {...props}>
+            {icon}
+            {title}
+          </NavLink>
+        );
+      })}
+    </nav>
   );
 }

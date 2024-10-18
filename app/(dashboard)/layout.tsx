@@ -41,14 +41,14 @@ export default function RootLayout({
           <div className="grid min-h-screen grid-rows-[max-content_1fr]">
             <Header />
             <ResizablePanelGroup direction="horizontal" className="w-full">
-              <ResizablePanel defaultSize={25}>
-                <Sidebar />
-              </ResizablePanel>
-              <ResizableHandle withHandle />
-              <ResizablePanel defaultSize={75}>
-                <div className="flex h-full items-center justify-center p-6">
-                  {children}
+              <ResizablePanel defaultSize={25} className="max-md:hidden">
+                <div className="flex h-full px-6 py-10">
+                  <Sidebar />
                 </div>
+              </ResizablePanel>
+              <ResizableHandle withHandle className="max-md:hidden" />
+              <ResizablePanel defaultSize={75}>
+                <main className="h-full px-8 py-10">{children}</main>
               </ResizablePanel>
             </ResizablePanelGroup>
           </div>

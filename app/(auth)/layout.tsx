@@ -32,7 +32,7 @@ export default function AuthLayout({
           disableTransitionOnChange
         >
           <main className="grid min-h-screen grid-rows-[1fr] items-center gap-16 p-8 pb-20 sm:p-16">
-            <div className="justify-self-center rounded-xl bg-slate-900 p-10 md:w-1/3">
+            <div className="w-full justify-self-center rounded-xl bg-primary-foreground p-10 sm:w-2/3 lg:w-1/3 xl:w-1/4">
               {children}
             </div>
           </main>
