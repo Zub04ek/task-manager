@@ -1,6 +1,5 @@
+import { AddTaskDialog } from '@/components/AddTaskDialog';
 import { TaskCard } from '@/components/TaskCard';
-import { Button } from '@/components/ui';
-import { DotsHorizontalIcon, PlusIcon } from '@radix-ui/react-icons';
 
 const GROUPS = [
   {
@@ -82,22 +81,8 @@ export default function Home() {
           >
             <div className="flex items-center justify-between pr-3">
               <span className="font-semibold">{group.title}</span>
-              <div className="flex gap-1">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="hover:bg-background"
-                >
-                  <PlusIcon />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="hover:bg-background"
-                >
-                  <DotsHorizontalIcon />
-                </Button>
-              </div>
+
+              {group.title === 'To do' && <AddTaskDialog />}
             </div>
             <ul className="flex h-[667px] flex-col gap-6 overflow-y-auto scroll-smooth pr-3">
               {todos.map((todo) => {
