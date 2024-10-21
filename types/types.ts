@@ -7,6 +7,16 @@ export type Task = {
   id: number;
   title: string;
   description: string;
-  status: string;
-  completed: boolean;
+  tag?: string;
+  priority?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  dueDate?: string;
+  status?: string;
+  isPlanned?: string;
+  isCompleted?: boolean;
+  coments?: {
+    commentDate: string;
+    comment: string;
+  }[];
 };
