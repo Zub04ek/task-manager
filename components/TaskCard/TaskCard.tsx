@@ -1,7 +1,8 @@
 'use client';
 
-import { Task } from '@/types';
+import { Task } from '@prisma/client';
 
+// import { Task } from '@/types';
 import { TaskCardDropdown } from '../TaskCardDropdown';
 
 interface TaskCardProps {
