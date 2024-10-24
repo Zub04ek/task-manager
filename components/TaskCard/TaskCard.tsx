@@ -20,7 +20,7 @@ export function TaskCard({ task }: TaskCardProps) {
             {task.status}
           </span>
         </div>
-        <h1 className="line-clamp-1 text-lg font-medium">{task.title}</h1>
+        <h3 className="line-clamp-1 text-lg font-medium">{task.title}</h3>
         <p className="line-clamp-3 text-xs">{task.description}</p>
       </div>
     </li>

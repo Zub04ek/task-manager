@@ -13,8 +13,8 @@ export type Task = {
   id: string;
   title: string;
   description: string;
-  tags?: string;
-  priority?: string;
+  tags: string;
+  priority: string;
   status?: string;
   isFutured?: boolean;
   isCompleted?: boolean;
