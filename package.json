@@ -11,7 +11,7 @@
     "format": "prettier --write '*/**/*.{js,jsx,json,ts,tsx,scss,css,md}'",
     "test": "jest",
     "prepare": "husky install",
-    "postinstall": "prisma generate"
+    "postinstall": "npx prisma generate"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",

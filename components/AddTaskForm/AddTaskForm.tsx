@@ -26,6 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui';
+// import { useTaskStore } from '@/stores';
 // import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -70,6 +71,8 @@ export function AddTaskForm({ closeOnSubmit }: AddTaskFormProps) {
     },
   });
 
+  // const addTask = useTaskStore((state) => state.addTask);
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
     try {
@@ -82,6 +85,7 @@ export function AddTaskForm({ closeOnSubmit }: AddTaskFormProps) {
     } catch (error) {
       console.log('error :>> ', error);
     }
+    // addTask(values);
     form.reset();
     closeOnSubmit();
   }
