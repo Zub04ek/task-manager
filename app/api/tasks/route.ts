@@ -39,7 +39,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(task);
   } catch (error) {
     console.log('ERROR CREATING TASK: ', error);
-    return NextResponse.json({ error: 'Error creating task', status: 500 });
+    // return NextResponse.json({ error: 'Error creating task', status: 500 });
+    return NextResponse.json(
+      { error: (error as Error).message },
+      { status: 500 }
+    );
   }
 }
 
@@ -63,7 +67,11 @@ export async function GET() {
     return NextResponse.json(tasks);
   } catch (error) {
     console.log('ERROR GETTING TASKS: ', error);
-    return NextResponse.json({ error: 'Error getting task', status: 500 });
+    // return NextResponse.json({ error: 'Error getting task', status: 500 });
+    return NextResponse.json(
+      { error: (error as Error).message },
+      { status: 500 }
+    );
   }
 }
 
