@@ -47,14 +47,14 @@ export function TasksList() {
         return (
           <div
             key={index}
-            className="grid grid-rows-[36px_1fr] gap-6 rounded-xl bg-accent py-6 pl-6 pr-3"
+            className="grid grid-rows-[36px_1fr] gap-3 rounded-xl bg-accent pb-3 pl-6 pr-3 pt-6"
           >
             <div className="flex items-center justify-between pr-3">
               <span className="font-semibold">{group.title}</span>
 
               {group.title === 'To do' && <AddTaskDialog />}
             </div>
-            <ul className="flex h-[667px] flex-col gap-6 overflow-y-auto scroll-smooth pr-3">
+            <ul className="flex h-[667px] flex-col gap-6 overflow-y-auto scroll-smooth py-3 pr-3">
               {allTasks
                 .filter((todo) => todo.status === group.title.toLowerCase())
                 .map((todo) => {
