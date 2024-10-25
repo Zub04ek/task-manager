@@ -15,7 +15,7 @@ export type Task = {
   description: string;
   tags: string;
   priority: string;
-  status?: string;
+  status?: 'to do' | 'in progress' | 'done';
   isFutured?: boolean;
   isCompleted?: boolean;
   createdAt?: string;
@@ -31,4 +31,13 @@ export type Comment = {
   comment: string;
   task: Task;
   taskId: string;
+};
+
+export type TaskType = {
+  userId: number;
+  id: string;
+  title: string;
+  description: string;
+  status: string;
+  completed: boolean;
 };
