@@ -1,6 +1,5 @@
+// import { Columns } from '@/components/columns';
 import { TasksList } from '@/components/TasksList';
-
-// import { Columns } from '../components';
 
 export default function Home() {
   return (
