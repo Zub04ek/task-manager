@@ -48,7 +48,9 @@ export default function RootLayout({
               </ResizablePanel>
               <ResizableHandle withHandle className="max-md:hidden" />
               <ResizablePanel defaultSize={75}>
-                <main className="h-full px-8 py-10">{children}</main>
+                <main className="max-h-[calc(100vh-64px)] overflow-y-auto px-8 py-10 lg:max-h-full">
+                  {children}
+                </main>
               </ResizablePanel>
             </ResizablePanelGroup>
           </div>

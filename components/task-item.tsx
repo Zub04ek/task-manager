@@ -17,9 +17,9 @@ export const TaskItem = ({ task }: TaskProps) => {
         <div className="flex items-center gap-1">
           <span
             className={cn('flex h-2 w-2 rounded-full', {
-              'bg-chart-5': task.status === 'to do',
-              'bg-chart-3': task.status === 'in progress',
-              'bg-chart-2': task.status === 'done',
+              'bg-chart-5': task.status === 'TO_DO',
+              'bg-chart-3': task.status === 'IN_PROGRESS',
+              'bg-chart-2': task.status === 'DONE',
             })}
           />
           <span className="text-[8px] font-medium uppercase text-muted-foreground">

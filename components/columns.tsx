@@ -33,9 +33,9 @@ export const Columns = () => {
   return (
     <section className="grid h-full gap-6 lg:grid-cols-3">
       <TaskForm initialData={selectedTask} />
-      <Column title="To do" status="to do" />
-      <Column title="In progress" status="in progress" />
-      <Column title="Done" status="done" />
+      <Column title="To do" status="TO_DO" />
+      <Column title="In progress" status="IN_PROGRESS" />
+      <Column title="Done" status="DONE" />
     </section>
   );
 };
