@@ -20,7 +20,7 @@ export const Column = (props: ColumnProps) => {
     <div className="grid grid-rows-[36px_1fr] gap-3 rounded-xl bg-accent pb-3 pl-6 pr-3 pt-6">
       <div className="flex items-center justify-between pr-3">
         <h2 className="font-semibold">{title}</h2>
-        {status === 'to do' && (
+        {status === 'TO_DO' && (
           <Button
             variant="ghost"
             size="icon"

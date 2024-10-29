@@ -20,7 +20,7 @@ model Task {
   description String
   tags        String
   priority    String
-  status      String   @default("to do")
+  status      Status   @default(TO_DO)
   isFutured   Boolean  @default(true)
   isCompleted Boolean  @default(false)
   createdAt   DateTime @default(now()) @map("created_at")
@@ -52,3 +52,9 @@ model Task {
 //   to   DateTime
 //   Task Task[]
 // }
+
+enum Status {
+  TO_DO
+  IN_PROGRESS
+  DONE
+}

@@ -13,7 +13,7 @@ export const TaskList = ({ status }: TaskListProps) => {
   const filteredTasks = allTasks.filter((todo) => todo.status === status);
 
   return (
-    <ul className="flex h-[667px] flex-col gap-6 overflow-y-auto scroll-smooth py-3 pr-3">
+    <ul className="flex flex-col gap-6 scroll-smooth py-3 pr-3 lg:max-h-[667px] lg:overflow-y-auto">
       {filteredTasks.map((todo) => (
         <TaskItem key={todo.id} task={todo} />
       ))}
