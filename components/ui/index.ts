@@ -9,3 +9,7 @@ export * from './popover';
 export * from './resizable';
 export * from './select';
 export * from './sheet';
+export * from './textarea';
+export * from './toast';
+export * from './toaster';
+export * from './tooltip';

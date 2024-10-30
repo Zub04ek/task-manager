@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import axios from 'axios';
 
+import { useToast } from '@/hooks';
 import { useSelectedTask } from '@/stores/SelectedTaskStore';
 import { useTasksStore } from '@/stores/TasksStore';
 
@@ -12,17 +13,34 @@ import { TaskForm } from './task-form';
 export const Columns = () => {
   const selectedTask = useSelectedTask((state) => state.task);
   const setAllTasks = useTasksStore((state) => state.setTasks);
+  const { toast } = useToast();
 
   const getTasks = async () => {
     try {
       const res = await axios.get('/api/tasks');
       if (res.data.error) {
-        console.log('err :>> ', res.data.error);
+        toast({
+          variant: 'destructive',
+          title: 'Uh oh! Something went wrong.',
+          description: res.data.error,
+        });
       } else {
         setAllTasks(res.data);
       }
     } catch (error) {
-      console.log('error :>> ', error);
+      if (axios.isAxiosError(error)) {
+        toast({
+          variant: 'destructive',
+          title: 'Uh oh! Something went wrong.',
+          description: error.message,
+        });
+      } else if (error instanceof Error) {
+        toast({
+          variant: 'destructive',
+          title: 'Uh oh! Something went wrong.',
+          description: error.message,
+        });
+      }
     }
   };
 

@@ -10,6 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui';
+import { useToast } from '@/hooks';
 import { useModalStore } from '@/stores';
 import { useSelectedTask } from '@/stores/SelectedTaskStore';
 import { Task } from '@prisma/client';
@@ -30,6 +31,7 @@ export const OptionsDropdown = ({ task }: OptionsDropdownProps) => {
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const taskModal = useModalStore();
+  const { toast } = useToast();
   const setSelectedTask = useSelectedTask((state) => state.setTask);
 
   const onDeleteTask = async (taskId: string) => {
@@ -37,16 +39,31 @@ export const OptionsDropdown = ({ task }: OptionsDropdownProps) => {
       setLoading(true);
       const res = await axios.delete(`/api/tasks/${taskId}`);
       if (res.data.error) {
-        console.log('err :>> ', res.data.error);
+        toast({
+          variant: 'destructive',
+          title: 'Uh oh! Something went wrong.',
+          description: res.data.error,
+        });
       } else {
         console.log('res.data :>> ', res.data);
         console.log('Task deleted successfully');
-        //   toast.success("Todo Deleted")
+        toast({ description: 'Task is deleted successfully' });
         // refetch all tasks
       }
     } catch (error) {
-      console.log('error :>> ', error);
-      //   toast.error("Something Went Wrong")
+      if (axios.isAxiosError(error)) {
+        toast({
+          variant: 'destructive',
+          title: 'Uh oh! Something went wrong.',
+          description: error.message,
+        });
+      } else if (error instanceof Error) {
+        toast({
+          variant: 'destructive',
+          title: 'Uh oh! Something went wrong.',
+          description: error.message,
+        });
+      }
     } finally {
       setLoading(false);
       setIsAlertModalOpen(false);

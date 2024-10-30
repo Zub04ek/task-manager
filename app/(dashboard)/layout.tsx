@@ -9,6 +9,7 @@ import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
+  Toaster,
 } from '@/components/ui';
 import { cn } from '@/lib/utils';
 
@@ -48,12 +49,13 @@ export default function RootLayout({
               </ResizablePanel>
               <ResizableHandle withHandle className="max-md:hidden" />
               <ResizablePanel defaultSize={75}>
-                <main className="max-h-[calc(100vh-64px)] overflow-y-auto px-8 py-10 lg:max-h-full">
+                <main className="max-h-[calc(100vh-64px)] overflow-y-auto px-8 py-10 lg:h-full">
                   {children}
                 </main>
               </ResizablePanel>
             </ResizablePanelGroup>
           </div>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
