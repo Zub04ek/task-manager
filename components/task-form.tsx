@@ -21,7 +21,9 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  Textarea,
 } from '@/components/ui';
+import { useToast } from '@/hooks';
 import { useModalStore } from '@/stores';
 import { useSelectedTask } from '@/stores/SelectedTaskStore';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -43,6 +45,7 @@ interface AddTaskFormProps {
 
 export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
   const taskModal = useModalStore();
+  const { toast } = useToast();
   const selectedTask = useSelectedTask((state) => state.task);
   const setSelectedTask = useSelectedTask((state) => state.setTask);
 
@@ -58,9 +61,11 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
   });
   const { isSubmitting, isValid } = form.formState;
 
-  const title = initialData ? 'Update the task' : 'Create a ask';
+  const title = initialData ? 'Update the task' : 'Create a task';
   const action = initialData ? 'Update' : 'Create';
-  //   const toastMessage = initialData ? 'Todo Updated' : 'Todo Created';
+  const toastMessage = initialData
+    ? 'Task is updated successfully!'
+    : 'Task is created successfully!';
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (initialData) {
@@ -68,29 +73,60 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
         const task = { id: initialData.id, ...values };
         const res = await axios.put('/api/tasks', task);
         if (res.data.error) {
-          console.log('err :>> ', res.data.error);
+          toast({
+            variant: 'destructive',
+            title: 'Uh oh! Something went wrong.',
+            description: res.data.error,
+          });
         } else {
-          console.log('task updated');
+          toast({ description: toastMessage });
         }
       } catch (error) {
-        console.log('error :>> ', error);
+        if (axios.isAxiosError(error)) {
+          toast({
+            variant: 'destructive',
+            title: 'Uh oh! Something went wrong.',
+            description: error.message,
+          });
+        } else if (error instanceof Error) {
+          toast({
+            variant: 'destructive',
+            title: 'Uh oh! Something went wrong.',
+            description: error.message,
+          });
+        }
       }
       setSelectedTask(null);
     } else {
       try {
         const res = await axios.post('/api/tasks', values);
         if (res.data.error) {
-          console.log('err :>> ', res.data.error);
+          toast({
+            variant: 'destructive',
+            title: 'Uh oh! Something went wrong.',
+            description: res.data.error,
+          });
         } else {
-          console.log('task created');
+          toast({ description: toastMessage });
         }
       } catch (error) {
-        console.log('error :>> ', error);
+        if (axios.isAxiosError(error)) {
+          toast({
+            variant: 'destructive',
+            title: 'Uh oh! Something went wrong.',
+            description: error.message,
+          });
+        } else if (error instanceof Error) {
+          toast({
+            variant: 'destructive',
+            title: 'Uh oh! Something went wrong.',
+            description: error.message,
+          });
+        }
       }
     }
     form.reset();
     taskModal.onClose();
-    // toast.success(toastMessage);
   };
 
   useEffect(() => {
@@ -143,7 +179,12 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
-                  <Input placeholder="" {...field} />
+                  <Textarea
+                    placeholder="Give a little bit more details"
+                    className="resize-none"
+                    rows={5}
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -156,7 +197,10 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
               <FormItem>
                 <FormLabel>Tags</FormLabel>
                 <FormControl>
-                  <Input placeholder="" {...field} />
+                  <Input
+                    placeholder="e.g. development, design, home"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

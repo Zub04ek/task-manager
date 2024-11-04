@@ -4,7 +4,13 @@ import { useModalStore } from '@/stores';
 import { PlusIcon } from '@radix-ui/react-icons';
 
 import { TaskList } from './task-list';
-import { Button } from './ui';
+import {
+  Button,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from './ui';
 
 interface ColumnProps {
   title: string;
@@ -21,14 +27,23 @@ export const Column = (props: ColumnProps) => {
       <div className="flex items-center justify-between pr-3">
         <h2 className="font-semibold">{title}</h2>
         {status === 'TO_DO' && (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="hover:bg-background"
-            onClick={() => taskModal.onOpen()}
-          >
-            <PlusIcon />
-          </Button>
+          <TooltipProvider delayDuration={100}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="hover:bg-background"
+                  onClick={() => taskModal.onOpen()}
+                >
+                  <PlusIcon />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Add a new task</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         )}
       </div>
       <TaskList status={status} />

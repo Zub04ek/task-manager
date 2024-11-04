@@ -7,7 +7,14 @@ import { ExitIcon } from '@radix-ui/react-icons';
 
 import { MobileNav } from '../MobileNav';
 import { ModeToggle } from '../ModeToggle';
-import { Button, buttonVariants } from '../ui';
+import {
+  Button,
+  buttonVariants,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '../ui';
 
 export function Header() {
   return (
@@ -29,9 +36,18 @@ export function Header() {
         </Link>
         <div className="flex gap-3 lg:gap-4">
           <ModeToggle />
-          <Button variant="outline" size="icon">
-            <ExitIcon />
-          </Button>
+          <TooltipProvider delayDuration={100}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <ExitIcon />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Logout</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           <MobileNav />
         </div>
       </div>

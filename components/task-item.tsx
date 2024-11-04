@@ -1,6 +1,8 @@
 'use client';
 
 import { cn } from '@/lib/utils';
+import { useModalStore } from '@/stores';
+import { useSelectedTask } from '@/stores/SelectedTaskStore';
 import { Task } from '@prisma/client';
 
 import { OptionsDropdown } from './options-dropdown';
@@ -10,8 +12,17 @@ interface TaskProps {
 }
 
 export const TaskItem = ({ task }: TaskProps) => {
+  const taskModal = useModalStore();
+  const setSelectedTask = useSelectedTask((state) => state.setTask);
+
   return (
-    <li className="relative rounded-2xl bg-background p-6">
+    <li
+      className="relative cursor-pointer rounded-2xl bg-background p-6 shadow-xl"
+      onDoubleClick={() => {
+        setSelectedTask(task);
+        taskModal.onOpen();
+      }}
+    >
       <OptionsDropdown task={task} />
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-1">
