@@ -4,7 +4,7 @@ import { Modal } from './modal';
 import { Button } from './ui';
 
 interface AlertModalProps {
-  disabled: boolean;
+  disabled?: boolean;
   open: boolean;
   onClose: () => void;
   onConfirm: () => void;

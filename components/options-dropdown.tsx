@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import axios from 'axios';
 
 import {
   Button,
@@ -10,9 +9,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui';
-import { useToast } from '@/hooks';
-import { useModalStore } from '@/stores';
-import { useSelectedTask } from '@/stores/SelectedTaskStore';
+import { useDeleteTask } from '@/hooks';
+import { useModalStore, useSelectedTask } from '@/stores';
 import { Task } from '@prisma/client';
 import {
   DotsHorizontalIcon,
@@ -29,45 +27,47 @@ interface OptionsDropdownProps {
 export const OptionsDropdown = ({ task }: OptionsDropdownProps) => {
   const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(false);
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const taskModal = useModalStore();
-  const { toast } = useToast();
   const setSelectedTask = useSelectedTask((state) => state.setTask);
 
-  const onDeleteTask = async (taskId: string) => {
-    try {
-      setLoading(true);
-      const res = await axios.delete(`/api/tasks/${taskId}`);
-      if (res.data.error) {
-        toast({
-          variant: 'destructive',
-          title: 'Uh oh! Something went wrong.',
-          description: res.data.error,
-        });
-      } else {
-        console.log('res.data :>> ', res.data);
-        console.log('Task deleted successfully');
-        toast({ description: 'Task is deleted successfully' });
-        // refetch all tasks
-      }
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        toast({
-          variant: 'destructive',
-          title: 'Uh oh! Something went wrong.',
-          description: error.message,
-        });
-      } else if (error instanceof Error) {
-        toast({
-          variant: 'destructive',
-          title: 'Uh oh! Something went wrong.',
-          description: error.message,
-        });
-      }
-    } finally {
-      setLoading(false);
-      setIsAlertModalOpen(false);
-    }
+  const deleteTaskMutation = useDeleteTask();
+
+  const onDeleteTask = (taskId: string) => {
+    deleteTaskMutation.mutate(taskId);
+    setIsAlertModalOpen(false);
+    // try {
+    //   setLoading(true);
+    //   const res = await axios.delete(`/api/tasks/${taskId}`);
+    //   if (res.data.error) {
+    //     toast({
+    //       variant: 'destructive',
+    //       title: 'Uh oh! Something went wrong.',
+    //       description: res.data.error,
+    //     });
+    //   } else {
+    //     console.log('res.data :>> ', res.data);
+    //     console.log('Task deleted successfully');
+    //     toast({ description: 'Task is deleted successfully' });
+    //   }
+    // } catch (error) {
+    //   if (axios.isAxiosError(error)) {
+    //     toast({
+    //       variant: 'destructive',
+    //       title: 'Uh oh! Something went wrong.',
+    //       description: error.message,
+    //     });
+    //   } else if (error instanceof Error) {
+    //     toast({
+    //       variant: 'destructive',
+    //       title: 'Uh oh! Something went wrong.',
+    //       description: error.message,
+    //     });
+    //   }
+    // } finally {
+    //   setLoading(false);
+    //   setIsAlertModalOpen(false);
+    // }
   };
 
   return (
@@ -75,7 +75,7 @@ export const OptionsDropdown = ({ task }: OptionsDropdownProps) => {
       <AlertModal
         open={isAlertModalOpen}
         onClose={() => setIsAlertModalOpen(false)}
-        disabled={loading}
+        // disabled={loading}
         onConfirm={() => onDeleteTask(task.id)}
       />
       <DropdownMenu
