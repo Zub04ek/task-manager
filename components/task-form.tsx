@@ -1,7 +1,6 @@
 'use client';
 
 import { FC, useEffect } from 'react';
-import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -23,13 +22,12 @@ import {
   SelectValue,
   Textarea,
 } from '@/components/ui';
-import { useToast } from '@/hooks';
-import { useModalStore } from '@/stores';
-import { useSelectedTask } from '@/stores/SelectedTaskStore';
+import { useAddTask, useEditTask } from '@/hooks';
+import { useModalStore, useSelectedTask } from '@/stores';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Status, Task } from '@prisma/client';
 
-const formSchema = z.object({
+export const formSchema = z.object({
   title: z.string().min(1, 'Title is required!').max(100),
   description: z.string().min(1, 'Description is required!'),
   tags: z.string().min(1, 'Tag is required!'),
@@ -45,7 +43,6 @@ interface AddTaskFormProps {
 
 export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
   const taskModal = useModalStore();
-  const { toast } = useToast();
   const selectedTask = useSelectedTask((state) => state.task);
   const setSelectedTask = useSelectedTask((state) => state.setTask);
 
@@ -63,67 +60,72 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
 
   const title = initialData ? 'Update the task' : 'Create a task';
   const action = initialData ? 'Update' : 'Create';
-  const toastMessage = initialData
-    ? 'Task is updated successfully!'
-    : 'Task is created successfully!';
+  // const toastMessage = initialData
+  //   ? 'Task is updated successfully!'
+  //   : 'Task is created successfully!';
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const addTaskMutation = useAddTask();
+  const editTaskMutation = useEditTask();
+
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
     if (initialData) {
-      try {
-        const task = { id: initialData.id, ...values };
-        const res = await axios.put('/api/tasks', task);
-        if (res.data.error) {
-          toast({
-            variant: 'destructive',
-            title: 'Uh oh! Something went wrong.',
-            description: res.data.error,
-          });
-        } else {
-          toast({ description: toastMessage });
-        }
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          toast({
-            variant: 'destructive',
-            title: 'Uh oh! Something went wrong.',
-            description: error.message,
-          });
-        } else if (error instanceof Error) {
-          toast({
-            variant: 'destructive',
-            title: 'Uh oh! Something went wrong.',
-            description: error.message,
-          });
-        }
-      }
+      const task = { id: initialData.id, ...values };
+      editTaskMutation.mutate(task);
       setSelectedTask(null);
+      // try {
+      //   const res = await axios.put('/api/tasks', task);
+      //   if (res.data.error) {
+      //     toast({
+      //       variant: 'destructive',
+      //       title: 'Uh oh! Something went wrong.',
+      //       description: res.data.error,
+      //     });
+      //   } else {
+      //     toast({ description: toastMessage });
+      //   }
+      // } catch (error) {
+      //   if (axios.isAxiosError(error)) {
+      //     toast({
+      //       variant: 'destructive',
+      //       title: 'Uh oh! Something went wrong.',
+      //       description: error.message,
+      //     });
+      //   } else if (error instanceof Error) {
+      //     toast({
+      //       variant: 'destructive',
+      //       title: 'Uh oh! Something went wrong.',
+      //       description: error.message,
+      //     });
+      //   }
+      // }
     } else {
-      try {
-        const res = await axios.post('/api/tasks', values);
-        if (res.data.error) {
-          toast({
-            variant: 'destructive',
-            title: 'Uh oh! Something went wrong.',
-            description: res.data.error,
-          });
-        } else {
-          toast({ description: toastMessage });
-        }
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          toast({
-            variant: 'destructive',
-            title: 'Uh oh! Something went wrong.',
-            description: error.message,
-          });
-        } else if (error instanceof Error) {
-          toast({
-            variant: 'destructive',
-            title: 'Uh oh! Something went wrong.',
-            description: error.message,
-          });
-        }
-      }
+      addTaskMutation.mutate(values);
+      // try {
+      //   const res = await axios.post('/api/tasks', values);
+      //   if (res.data.error) {
+      //     toast({
+      //       variant: 'destructive',
+      //       title: 'Uh oh! Something went wrong.',
+      //       description: res.data.error,
+      //     });
+      //   } else {
+      //     toast({ description: toastMessage });
+      //   }
+      // } catch (error) {
+      //   if (axios.isAxiosError(error)) {
+      //     toast({
+      //       variant: 'destructive',
+      //       title: 'Uh oh! Something went wrong.',
+      //       description: error.message,
+      //     });
+      //   } else if (error instanceof Error) {
+      //     toast({
+      //       variant: 'destructive',
+      //       title: 'Uh oh! Something went wrong.',
+      //       description: error.message,
+      //     });
+      //   }
+      // }
     }
     form.reset();
     taskModal.onClose();
