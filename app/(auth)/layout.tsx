@@ -2,8 +2,8 @@ import React from 'react';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
-import { ThemeProvider } from '@/components/theme-provider';
 import { cn } from '@/lib/utils';
+import { ThemeProvider } from '@/utils/theme-provider';
 
 import './globals.css';
 
