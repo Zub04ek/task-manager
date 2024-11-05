@@ -58,12 +58,12 @@ export const Columns = () => {
       </div>
     );
 
-  if (error)
-    return toast({
-      variant: 'destructive',
-      title: 'Uh oh! Something went wrong.',
-      description: error.message,
-    });
+  // if (error)
+  //   return toast({
+  //     variant: 'destructive',
+  //     title: 'Uh oh! Something went wrong.',
+  //     description: error.message,
+  //   });
 
   return (
     <section className="grid h-full gap-6 lg:grid-cols-3">
