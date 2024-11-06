@@ -6,6 +6,7 @@ import { z } from 'zod';
 
 import { useAddTask, useEditTask } from '@/app/api/hooks';
 import { Modal } from '@/components/Modal';
+import { TiptapEditor } from '@/components/TiptapEditor';
 import {
   Button,
   DialogFooter,
@@ -27,8 +28,22 @@ import { useModalStore, useSelectedTask } from '@/stores';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Status, Task } from '@prisma/client';
 
+const extractTextFromHTML = (html: string) => {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+  return doc.body.textContent?.trim() || '';
+};
+
 export const formSchema = z.object({
   title: z.string().min(1, 'Title is required!').max(100),
+  test: z.string().refine(
+    (value) => {
+      return extractTextFromHTML(value).trim().length >= 5;
+    },
+    {
+      message: 'The text must be at least 5 characters long after trimming',
+    }
+  ),
   description: z.string().min(1, 'Description is required!'),
   tags: z.string().min(1, 'Tag is required!'),
   priority: z.string({
@@ -52,6 +67,7 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: initialData?.title || '',
+      test: '',
       description: initialData?.description || '',
       tags: initialData?.tags || '',
       priority: initialData?.tags || 'low',
@@ -113,6 +129,22 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
                 <FormLabel>Title</FormLabel>
                 <FormControl>
                   <Input placeholder="" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="test"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Test</FormLabel>
+                <FormControl>
+                  <TiptapEditor
+                    content={field.value}
+                    onChange={(value) => field.onChange(value)}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
