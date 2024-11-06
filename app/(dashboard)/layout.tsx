@@ -4,7 +4,6 @@ import { Inter } from 'next/font/google';
 
 import { Header } from '@/components/Header';
 import { Sidebar } from '@/components/Sidebar';
-import { ThemeProvider } from '@/components/theme-provider';
 import {
   ResizableHandle,
   ResizablePanel,
@@ -12,7 +11,7 @@ import {
   Toaster,
 } from '@/components/ui';
 import { cn } from '@/lib/utils';
-import TanstackProvider from '@/utils/tanstack-provider';
+import { TanstackProvider, ThemeProvider } from '@/utils';
 
 import './globals.css';
 
