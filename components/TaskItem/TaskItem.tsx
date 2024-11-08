@@ -38,7 +38,10 @@ export const TaskItem = ({ task }: TaskProps) => {
           </span>
         </div>
         <h3 className="line-clamp-1 text-lg font-medium">{task.title}</h3>
-        <p className="line-clamp-3 text-xs">{task.description}</p>
+        <div
+          className="line-clamp-3 text-xs"
+          dangerouslySetInnerHTML={{ __html: task.description }}
+        />
       </div>
     </li>
   );

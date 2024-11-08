@@ -1,23 +1,24 @@
 'use client';
 
 import {
-  //   AlignCenter,
-  //   AlignLeft,
-  //   AlignRight,
+  AlignCenter,
+  AlignLeft,
+  AlignRight,
   Bold,
   Code,
+  Heading2,
+  Heading3,
   Heading4,
-  Heading5,
-  Heading6,
-  //   Highlighter,
+  Highlighter,
   Italic,
+  Link,
   List,
   ListOrdered,
   Strikethrough,
   //   Upload,
 } from 'lucide-react';
 
-import { Toggle } from '@/components/ui';
+import { Input, Toggle } from '@/components/ui';
 import { type Editor } from '@tiptap/react';
 
 interface ToolBarProps {
@@ -35,19 +36,19 @@ export const ToolBar = ({ editor }: ToolBarProps) => {
 
   const options = [
     {
-      icon: <Heading4 className="size-4" />,
-      onClick: () => editor.chain().focus().toggleHeading({ level: 4 }).run(),
-      preesed: editor.isActive('heading', { level: 1 }),
-    },
-    {
-      icon: <Heading5 className="size-4" />,
-      onClick: () => editor.chain().focus().toggleHeading({ level: 5 }).run(),
+      icon: <Heading2 className="size-4" />,
+      onClick: () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
       preesed: editor.isActive('heading', { level: 2 }),
     },
     {
-      icon: <Heading6 className="size-4" />,
-      onClick: () => editor.chain().focus().toggleHeading({ level: 6 }).run(),
+      icon: <Heading3 className="size-4" />,
+      onClick: () => editor.chain().focus().toggleHeading({ level: 3 }).run(),
       preesed: editor.isActive('heading', { level: 3 }),
+    },
+    {
+      icon: <Heading4 className="size-4" />,
+      onClick: () => editor.chain().focus().toggleHeading({ level: 4 }).run(),
+      preesed: editor.isActive('heading', { level: 4 }),
     },
     {
       icon: <Bold className="size-4" />,
@@ -64,21 +65,21 @@ export const ToolBar = ({ editor }: ToolBarProps) => {
       onClick: () => editor.chain().focus().toggleStrike().run(),
       preesed: editor.isActive('strike'),
     },
-    // {
-    //   icon: <AlignLeft className="size-4" />,
-    //   onClick: () => editor.chain().focus().setTextAlign('left').run(),
-    //   preesed: editor.isActive({ textAlign: 'left' }),
-    // },
-    // {
-    //   icon: <AlignCenter className="size-4" />,
-    //   onClick: () => editor.chain().focus().setTextAlign('center').run(),
-    //   preesed: editor.isActive({ textAlign: 'center' }),
-    // },
-    // {
-    //   icon: <AlignRight className="size-4" />,
-    //   onClick: () => editor.chain().focus().setTextAlign('right').run(),
-    //   preesed: editor.isActive({ textAlign: 'right' }),
-    // },
+    {
+      icon: <AlignLeft className="size-4" />,
+      onClick: () => editor.chain().focus().setTextAlign('left').run(),
+      preesed: editor.isActive({ textAlign: 'left' }),
+    },
+    {
+      icon: <AlignCenter className="size-4" />,
+      onClick: () => editor.chain().focus().setTextAlign('center').run(),
+      preesed: editor.isActive({ textAlign: 'center' }),
+    },
+    {
+      icon: <AlignRight className="size-4" />,
+      onClick: () => editor.chain().focus().setTextAlign('right').run(),
+      preesed: editor.isActive({ textAlign: 'right' }),
+    },
     {
       icon: <List className="size-4" />,
       onClick: () => editor.chain().focus().toggleBulletList().run(),
@@ -90,15 +91,23 @@ export const ToolBar = ({ editor }: ToolBarProps) => {
       preesed: editor.isActive('orderedList'),
     },
     {
+      icon: <Link className="size-4" />,
+      onClick: () => editor.chain().focus().extendMarkRange('link').run(),
+      preesed: editor.isActive('link'),
+    },
+    {
       icon: <Code className="size-4" />,
       onClick: () => editor.chain().focus().toggleCodeBlock().run(),
       preesed: editor.isActive('code'),
     },
-    // {
-    //   icon: <Highlighter className="size-4" />,
-    //   onClick: () => editor.chain().focus().toggleHighlight().run(),
-    //   preesed: editor.isActive('highlight'),
-    // },
+    {
+      icon: <Highlighter className="size-4" />,
+      onClick: () =>
+        editor.chain().focus().toggleHighlight({ color: '#b197fc' }).run(),
+      preesed: editor.isActive('highlight', { color: '#b197fc' })
+        ? true
+        : false,
+    },
     // {
     //   icon: <Upload className="size-4" />,
     //   onClick: () => addImage(),
@@ -107,7 +116,7 @@ export const ToolBar = ({ editor }: ToolBarProps) => {
   ];
 
   return (
-    <div className="sticky top-10 z-50 mb-1 space-x-1 rounded-md border p-1.5">
+    <div className="mb-1 flex flex-wrap gap-1 rounded-md border p-1.5">
       {options.map((option, i) => (
         <Toggle
           key={i}
@@ -118,6 +127,17 @@ export const ToolBar = ({ editor }: ToolBarProps) => {
           {option.icon}
         </Toggle>
       ))}
+      {/* <Toggle size="sm"> */}
+      <input
+        className="size-8 rounded"
+        type="color"
+        onChange={(event) =>
+          editor.chain().focus().setColor(event.target.value).run()
+        }
+        value={editor.getAttributes('textStyle').color}
+        data-testid="setColor"
+      />
+      {/* </Toggle> */}
     </div>
   );
 };
