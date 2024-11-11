@@ -22,7 +22,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-  Textarea,
+  // Textarea,
 } from '@/components/ui';
 import { useModalStore, useSelectedTask } from '@/stores';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -36,7 +36,7 @@ const extractTextFromHTML = (html: string) => {
 
 export const formSchema = z.object({
   title: z.string().min(1, 'Title is required!').max(100),
-  test: z.string().refine(
+  description: z.string().refine(
     (value) => {
       return extractTextFromHTML(value).trim().length >= 5;
     },
@@ -44,7 +44,7 @@ export const formSchema = z.object({
       message: 'The text must be at least 5 characters long after trimming',
     }
   ),
-  description: z.string().min(1, 'Description is required!'),
+  // description: z.string().min(1, 'Description is required!'),
   tags: z.string().min(1, 'Tag is required!'),
   priority: z.string({
     required_error: 'Please select priority!',
@@ -67,7 +67,7 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: initialData?.title || '',
-      test: '',
+      // test: '',
       description: initialData?.description || '',
       tags: initialData?.tags || '',
       priority: initialData?.tags || 'low',
@@ -80,6 +80,7 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
   const action = initialData ? 'Update' : 'Create';
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
+    console.log('values :>> ', values);
     if (initialData) {
       const task = { id: initialData.id, ...values };
       editTaskMutate(task);
@@ -119,7 +120,7 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full space-y-5 justify-self-center"
+          className="w-full max-w-[462px] space-y-5 justify-self-center"
         >
           <FormField
             control={form.control}
@@ -136,10 +137,10 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
           />
           <FormField
             control={form.control}
-            name="test"
+            name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Test</FormLabel>
+                <FormLabel>Description</FormLabel>
                 <FormControl>
                   <TiptapEditor
                     content={field.value}
@@ -150,7 +151,7 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
               </FormItem>
             )}
           />
-          <FormField
+          {/* <FormField
             control={form.control}
             name="description"
             render={({ field }) => (
@@ -167,7 +168,7 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
           <FormField
             control={form.control}
             name="tags"
@@ -243,7 +244,10 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
               type="button"
               variant="outline"
               disabled={isSubmitting}
-              onClick={taskModal.onClose}
+              onClick={() => {
+                form.reset();
+                taskModal.onClose();
+              }}
             >
               Cancel
             </Button>
