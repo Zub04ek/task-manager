@@ -3,13 +3,9 @@
 // import ImageResize from 'tiptap-extension-resize-image';
 
 import { ToolBar } from '@/components/ToolBar';
-// import BulletList from '@tiptap/extension-bullet-list';
 import { Color } from '@tiptap/extension-color';
-// import Heading from '@tiptap/extension-heading';
-import Highlight from '@tiptap/extension-highlight';
 import Link from '@tiptap/extension-link';
 // import Image from '@tiptap/extension-image';
-// import OrderedList from '@tiptap/extension-ordered-list';
 // import Text from '@tiptap/extension-text';
 import TextAlign from '@tiptap/extension-text-align';
 import TextStyle from '@tiptap/extension-text-style';
@@ -32,7 +28,7 @@ export const TiptapEditor = ({ content, onChange }: TiptapEditorProps) => {
         },
         bold: {
           HTMLAttributes: {
-            class: 'text-foreground',
+            class: 'not-prose',
           },
         },
         heading: {
@@ -55,26 +51,6 @@ export const TiptapEditor = ({ content, onChange }: TiptapEditorProps) => {
       TextAlign.configure({
         types: ['heading', 'paragraph'],
       }),
-      Highlight.configure({
-        multicolor: true,
-      }),
-      // Heading.configure({
-      //   levels: [2, 3, 4],
-      //   HTMLAttributes: {
-      //     class: 'text-foreground m-0',
-      //   },
-      // }),
-      // OrderedList.configure({
-      //   HTMLAttributes: {
-      //     class: 'list-decimal my-2 ml-2',
-      //   },
-      // }),
-      // BulletList.configure({
-      //   HTMLAttributes: {
-      //     class: 'list-disc my-2 ml-2',
-      //   },
-      // }),
-      // Text,
       TextStyle,
       Color.configure({
         types: ['textStyle', 'heading', 'paragraph'],
