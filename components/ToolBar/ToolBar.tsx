@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   AlignCenter,
   AlignLeft,
@@ -10,7 +10,6 @@ import {
   Heading2,
   Heading3,
   Heading4,
-  Highlighter,
   Italic,
   Link,
   List,
@@ -19,15 +18,17 @@ import {
   //   Upload,
 } from 'lucide-react';
 
-import { Toggle } from '@/components/ui';
+import { EditorLinkPopover } from '@/components/EditorLinkPopover';
+import { ToolbarButton } from '@/components/ToolbarButton';
+// import { Toggle } from '@/components/ui';
+import { HSLToHex } from '@/utils';
 import { type Editor } from '@tiptap/react';
 
 interface ToolBarProps {
-  editor: Editor | null;
+  editor: Editor;
 }
 
 export const ToolBar = ({ editor }: ToolBarProps) => {
-  // if (!editor) return null;
   //   const addImage = () => {
   //     const url = window.prompt('URL');
   //     if (url) {
@@ -37,77 +38,82 @@ export const ToolBar = ({ editor }: ToolBarProps) => {
 
   const options = [
     {
+      label: 'Heading (level 2)',
       icon: <Heading2 className="size-4" />,
-      onClick: () => editor?.chain().focus().toggleHeading({ level: 2 }).run(),
-      preesed: editor?.isActive('heading', { level: 2 }),
+      onClick: () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
+      preesed: editor.isActive('heading', { level: 2 }),
     },
     {
+      label: 'Heading (level 3)',
       icon: <Heading3 className="size-4" />,
-      onClick: () => editor?.chain().focus().toggleHeading({ level: 3 }).run(),
-      preesed: editor?.isActive('heading', { level: 3 }),
+      onClick: () => editor.chain().focus().toggleHeading({ level: 3 }).run(),
+      preesed: editor.isActive('heading', { level: 3 }),
     },
     {
+      label: 'Heading (level 4)',
       icon: <Heading4 className="size-4" />,
-      onClick: () => editor?.chain().focus().toggleHeading({ level: 4 }).run(),
-      preesed: editor?.isActive('heading', { level: 4 }),
+      onClick: () => editor.chain().focus().toggleHeading({ level: 4 }).run(),
+      preesed: editor.isActive('heading', { level: 4 }),
     },
     {
+      label: 'Bold',
       icon: <Bold className="size-4" />,
-      onClick: () => editor?.chain().focus().toggleBold().run(),
-      preesed: editor?.isActive('bold'),
+      onClick: () => editor.chain().focus().toggleBold().run(),
+      preesed: editor.isActive('bold'),
     },
     {
+      label: 'Italic',
       icon: <Italic className="size-4" />,
-      onClick: () => editor?.chain().focus().toggleItalic().run(),
-      preesed: editor?.isActive('italic'),
+      onClick: () => editor.chain().focus().toggleItalic().run(),
+      preesed: editor.isActive('italic'),
     },
     {
+      label: 'Strikethrough',
       icon: <Strikethrough className="size-4" />,
-      onClick: () => editor?.chain().focus().toggleStrike().run(),
-      preesed: editor?.isActive('strike'),
+      onClick: () => editor.chain().focus().toggleStrike().run(),
+      preesed: editor.isActive('strike'),
     },
     {
+      label: 'Align left',
       icon: <AlignLeft className="size-4" />,
-      onClick: () => editor?.chain().focus().setTextAlign('left').run(),
-      preesed: editor?.isActive({ textAlign: 'left' }),
+      onClick: () => editor.chain().focus().setTextAlign('left').run(),
+      preesed: editor.isActive({ textAlign: 'left' }),
     },
     {
+      label: 'Align center',
       icon: <AlignCenter className="size-4" />,
-      onClick: () => editor?.chain().focus().setTextAlign('center').run(),
-      preesed: editor?.isActive({ textAlign: 'center' }),
+      onClick: () => editor.chain().focus().setTextAlign('center').run(),
+      preesed: editor.isActive({ textAlign: 'center' }),
     },
     {
+      label: 'Align right',
       icon: <AlignRight className="size-4" />,
-      onClick: () => editor?.chain().focus().setTextAlign('right').run(),
-      preesed: editor?.isActive({ textAlign: 'right' }),
+      onClick: () => editor.chain().focus().setTextAlign('right').run(),
+      preesed: editor.isActive({ textAlign: 'right' }),
     },
     {
+      label: 'Bullet list',
       icon: <List className="size-4" />,
-      onClick: () => editor?.chain().focus().toggleBulletList().run(),
-      preesed: editor?.isActive('bulletList'),
+      onClick: () => editor.chain().focus().toggleBulletList().run(),
+      preesed: editor.isActive('bulletList'),
     },
     {
+      label: 'Numbered list',
       icon: <ListOrdered className="size-4" />,
-      onClick: () => editor?.chain().focus().toggleOrderedList().run(),
-      preesed: editor?.isActive('orderedList'),
+      onClick: () => editor.chain().focus().toggleOrderedList().run(),
+      preesed: editor.isActive('orderedList'),
     },
     {
+      label: 'Link',
       icon: <Link className="size-4" />,
-      onClick: () => editor?.chain().focus().extendMarkRange('link').run(),
-      preesed: editor?.isActive('link'),
+      onClick: () => editor.chain().focus().extendMarkRange('link').run(),
+      preesed: editor.isActive('link'),
     },
     {
+      label: 'Code',
       icon: <Code className="size-4" />,
-      onClick: () => editor?.chain().focus().toggleCodeBlock().run(),
-      preesed: editor?.isActive('code'),
-    },
-    {
-      icon: <Highlighter className="size-4" />,
-      onClick: () =>
-        editor?.chain().focus().toggleHighlight({ color: '#b197fc' }).run(),
-      preesed: editor?.isActive('highlight', { color: '#b197fc' })
-        ? true
-        : false,
+      onClick: () => editor.chain().focus().toggleCodeBlock().run(),
+      preesed: editor.isActive('codeBlock'),
     },
     // {
     //   icon: <Upload className="size-4" />,
@@ -116,70 +122,63 @@ export const ToolBar = ({ editor }: ToolBarProps) => {
     // },
   ];
 
-  const HSLToHex = (hsl: { h: number; s: number; l: number }): string => {
-    const { h, s, l } = hsl;
-
-    const hDecimal = l / 100;
-    const a = (s * Math.min(hDecimal, 1 - hDecimal)) / 100;
-    const f = (n: number) => {
-      const k = (n + h / 30) % 12;
-      const color = hDecimal - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
-      return Math.round(255 * color)
-        .toString(16)
-        .padStart(2, '0');
-    };
-    return `#${f(0)}${f(8)}${f(4)}`;
-  };
   const foregroundColor = getComputedStyle(
     document.documentElement
   ).getPropertyValue('--foreground');
 
   const [selectedColor, setSelectedColor] = useState<string>('');
 
-  useMemo(() => {
-    // console.log('foregroundColor :>> ', foregroundColor);
+  useEffect(() => {
     const hslArray = foregroundColor.split(' ').map((part) => parseFloat(part));
 
     const [h, s, l] = hslArray;
     const textColor = { h, s, l };
     const color =
-      editor?.getAttributes('textStyle')?.color || HSLToHex(textColor);
+      editor.getAttributes('textStyle')?.color || HSLToHex(textColor);
     setSelectedColor(color);
   }, [foregroundColor]);
 
   const handleColorChange = useCallback(
     (value: string) => {
       setSelectedColor(value);
-      editor?.chain().setColor(value).run();
+      editor.chain().setColor(value).run();
     },
     [editor]
   );
 
-  // useEffect(() => {
-  //   setSelectedColor(color);
-  // }, [color]);
+  if (!editor) return null;
 
   return (
-    <div className="mb-1 flex flex-wrap gap-1 rounded-md border p-1.5">
+    <div className="mb-1 flex flex-wrap items-center justify-between rounded-md border p-1.5">
       {options.map((option, i) => (
-        <Toggle
+        // <Toggle
+        //   key={i}
+        //   size="sm"
+        //   pressed={option.preesed}
+        //   onPressedChange={() => option.onClick()}
+        // >
+        //   {option.icon}
+        // </Toggle>
+        <ToolbarButton
           key={i}
-          size="sm"
-          pressed={option.preesed}
-          onPressedChange={option.onClick}
+          onClick={option.onClick}
+          isActive={option.preesed}
+          tooltip={option.label}
+          aria-label={option.label}
         >
           {option.icon}
-        </Toggle>
+        </ToolbarButton>
       ))}
-      {/* <Toggle size="sm"> */}
-      <input
-        className="size-8 rounded"
-        type="color"
-        value={selectedColor}
-        onChange={(event) => handleColorChange(event.target.value)}
-        data-testid="setColor"
-      />
-      {/* </Toggle> */}
+      {/* <EditorLinkPopover editor={editor} /> */}
+      <ToolbarButton tooltip="Text color">
+        <input
+          className="size-8 cursor-pointer rounded"
+          type="color"
+          value={selectedColor}
+          onChange={(event) => handleColorChange(event.target.value)}
+          data-testid="setColor"
+        />
+      </ToolbarButton>
     </div>
   );
 };

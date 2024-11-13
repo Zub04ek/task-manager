@@ -80,7 +80,6 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
   const action = initialData ? 'Update' : 'Create';
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log('values :>> ', values);
     if (initialData) {
       const task = { id: initialData.id, ...values };
       editTaskMutate(task);
@@ -120,7 +119,7 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full max-w-[462px] space-y-5 justify-self-center"
+          className="w-full max-w-[528px] space-y-5"
         >
           <FormField
             control={form.control}
