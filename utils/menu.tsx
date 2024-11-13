@@ -4,27 +4,23 @@ import {
   TrashIcon,
 } from '@radix-ui/react-icons';
 
-const dashboard = <DashboardIcon />;
-const list = <ListBulletIcon />;
-const trash = <TrashIcon />;
-
 const menu = [
   {
     id: 1,
     title: 'Active',
-    icon: dashboard,
+    icon: <DashboardIcon />,
     link: '/',
   },
   {
     id: 2,
     title: 'To do',
-    icon: list,
+    icon: <ListBulletIcon />,
     link: '/planned',
   },
   {
     id: 3,
     title: 'Completed',
-    icon: trash,
+    icon: <TrashIcon />,
     link: '/completed',
   },
 ];

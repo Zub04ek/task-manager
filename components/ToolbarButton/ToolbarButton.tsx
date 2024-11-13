@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef } from 'react';
+import { ComponentPropsWithoutRef, forwardRef } from 'react';
 
 import {
   Toggle,
@@ -16,37 +16,37 @@ interface ToolbarButtonProps extends ComponentPropsWithoutRef<typeof Toggle> {
   tooltipOptions?: TooltipContentProps;
 }
 
-export const ToolbarButton = ({
-  isActive,
-  children,
-  tooltip,
-  className,
-  tooltipOptions,
-  ...props
-}: ToolbarButtonProps) => {
-  const toggleButton = (
-    <Toggle
-      size="sm"
-      //   ref={ref}
-      className={cn('size-8 p-0', { 'bg-accent': isActive }, className)}
-      {...props}
-    >
-      {children}
-    </Toggle>
-  );
+export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
+  (
+    { isActive, children, tooltip, className, tooltipOptions, ...props },
+    ref
+  ) => {
+    const toggleButton = (
+      <Toggle
+        size="sm"
+        ref={ref}
+        className={cn('size-8 p-0', { 'bg-accent': isActive }, className)}
+        {...props}
+      >
+        {children}
+      </Toggle>
+    );
 
-  if (!tooltip) {
-    return toggleButton;
+    if (!tooltip) {
+      return toggleButton;
+    }
+
+    return (
+      <TooltipProvider delayDuration={100}>
+        <Tooltip>
+          <TooltipTrigger asChild>{toggleButton}</TooltipTrigger>
+          <TooltipContent {...tooltipOptions}>{tooltip}</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
   }
+);
 
-  return (
-    <TooltipProvider delayDuration={100}>
-      <Tooltip>
-        <TooltipTrigger asChild>{toggleButton}</TooltipTrigger>
-        <TooltipContent {...tooltipOptions}>
-          <div className="">{tooltip}</div>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-  );
-};
+ToolbarButton.displayName = 'ToolbarButton';
+
+export default ToolbarButton;
