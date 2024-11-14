@@ -1,12 +1,9 @@
 'use client';
 
-// import ImageResize from 'tiptap-extension-resize-image';
-
 import { ToolBar } from '@/components/ToolBar';
 import { Color } from '@tiptap/extension-color';
+import Image from '@tiptap/extension-image';
 import Link from '@tiptap/extension-link';
-// import Image from '@tiptap/extension-image';
-// import Text from '@tiptap/extension-text';
 import TextAlign from '@tiptap/extension-text-align';
 import TextStyle from '@tiptap/extension-text-style';
 import { EditorContent, useEditor } from '@tiptap/react';
@@ -51,15 +48,22 @@ export const TiptapEditor = ({ content, onChange }: TiptapEditorProps) => {
       TextAlign.configure({
         types: ['heading', 'paragraph'],
       }),
-      TextStyle,
       Color.configure({
         types: ['textStyle', 'heading', 'paragraph'],
       }),
       Link.configure({
-        openOnClick: false,
+        HTMLAttributes: {
+          class: 'cursor-pointer text-foreground no-underline hover:underline',
+        },
         autolink: true,
         defaultProtocol: 'https',
       }),
+      Image.configure({
+        // allowedMimeTypes: ['image/*'],
+        // maxFileSize: 5 * 1024 * 1024,
+        allowBase64: true,
+      }),
+      TextStyle,
     ],
     editorProps: {
       attributes: {
@@ -71,7 +75,6 @@ export const TiptapEditor = ({ content, onChange }: TiptapEditorProps) => {
     immediatelyRender: true,
     shouldRerenderOnTransaction: false,
     onUpdate: ({ editor }) => {
-      // console.log(editor.getHTML());
       onChange(editor.getHTML());
     },
   });

@@ -20,8 +20,6 @@ export const EditorLinkBlock = forwardRef<HTMLDivElement, LinkEditorProps>(
   ({ onSave, defaultUrl, className }, ref) => {
     const formRef = useRef<HTMLDivElement>(null);
     const [url, setUrl] = useState(defaultUrl || '');
-    // const [text, setText] = React.useState(defaultText || '');
-    // const [isNewTab, setIsNewTab] = React.useState(defaultIsNewTab || false);
 
     const handleSave = useCallback(
       (e: FormEvent) => {
