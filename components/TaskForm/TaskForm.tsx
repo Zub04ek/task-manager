@@ -24,6 +24,7 @@ import {
   SelectValue,
   // Textarea,
 } from '@/components/ui';
+import MultipleSelector, { Option } from '@/components/ui/multiple-selector';
 import { useModalStore, useSelectedTask } from '@/stores';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Status, Task } from '@prisma/client';
@@ -33,6 +34,29 @@ const extractTextFromHTML = (html: string) => {
   const doc = parser.parseFromString(html, 'text/html');
   return doc.body.textContent?.trim() || '';
 };
+
+// const TAGS = [
+//   'health',
+//   'sport',
+//   'travel',
+//   'home',
+//   'finance',
+//   'entertainment',
+// ] as const;
+
+const OPTIONS: Option[] = [
+  { label: 'health', value: 'health', color: '#ef4444' },
+  { label: 'sport', value: 'sport', color: '#eab308' },
+  { label: 'travel', value: 'travel', color: '#22c55e' },
+  { label: 'home', value: 'home', color: '#06b6d4' },
+  { label: 'finance', value: 'finance', color: '#3b82f6' },
+  { label: 'entertainment', value: 'entertainment', color: '#8b5cf6' },
+];
+
+const optionSchema = z.object({
+  label: z.string(),
+  value: z.string(),
+});
 
 export const formSchema = z.object({
   title: z.string().min(1, 'Title is required!').max(100),
@@ -45,7 +69,9 @@ export const formSchema = z.object({
     }
   ),
   // description: z.string().min(1, 'Description is required!'),
-  tags: z.string().min(1, 'Tag is required!'),
+  // tags: z.string().min(1, 'Tag is required!'),
+  // tags: z.array(z.enum(TAGS)).min(1, 'Please, select at least 1 tag'),
+  tags: z.array(optionSchema).min(1, 'Please, select at least 1 tag'),
   priority: z.string({
     required_error: 'Please select priority!',
   }),
@@ -69,7 +95,7 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
       title: initialData?.title || '',
       // test: '',
       description: initialData?.description || '',
-      tags: initialData?.tags || '',
+      tags: [],
       priority: initialData?.tags || 'low',
       status: initialData?.status || Status.TO_DO,
     },
@@ -95,13 +121,13 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
     if (selectedTask === null) {
       form.setValue('title', '');
       form.setValue('description', '');
-      form.setValue('tags', '');
+      form.setValue('tags', []);
       form.setValue('priority', 'low');
       form.setValue('status', Status.TO_DO);
     } else if (initialData !== null) {
       form.setValue('title', initialData?.title);
       form.setValue('description', initialData?.description);
-      form.setValue('tags', initialData?.tags);
+      form.setValue('tags', []);
       form.setValue('priority', initialData?.priority);
       form.setValue('status', initialData?.status);
     }
@@ -168,7 +194,7 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
               </FormItem>
             )}
           /> */}
-          <FormField
+          {/* <FormField
             control={form.control}
             name="tags"
             render={({ field }) => (
@@ -178,6 +204,30 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
                   <Input
                     placeholder="e.g. development, design, home"
                     {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          /> */}
+          <FormField
+            control={form.control}
+            name="tags"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Tags</FormLabel>
+                <FormControl>
+                  <MultipleSelector
+                    {...field}
+                    defaultOptions={OPTIONS}
+                    placeholder="Select tags you like..."
+                    hidePlaceholderWhenSelected={true}
+                    creatable
+                    emptyIndicator={
+                      <p className="text-center text-gray-600 dark:text-gray-400">
+                        no results found.
+                      </p>
+                    }
                   />
                 </FormControl>
                 <FormMessage />
