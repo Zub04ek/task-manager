@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
-import { Modal } from '../Modal';
-import { Button } from '../ui';
+import { Modal } from '@/components/Modal';
+import { Button } from '@/components/ui';
 
 interface AlertModalProps {
   disabled?: boolean;

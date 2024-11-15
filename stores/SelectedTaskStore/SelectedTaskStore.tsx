@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-import { Task } from '@prisma/client';
+import { Task } from '@/types';
 
 interface useSelectedTaskProps {
   task: Task | null;

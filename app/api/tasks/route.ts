@@ -12,6 +12,9 @@ export async function GET() {
 
     const tasks = await prisma.task.findMany({
       orderBy: { createdAt: 'desc' },
+      include: {
+        tags: true,
+      },
     });
     //   {where: {
     //     userId,

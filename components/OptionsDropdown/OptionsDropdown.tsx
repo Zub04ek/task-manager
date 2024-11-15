@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui';
 import { useModalStore, useSelectedTask } from '@/stores';
-import { Task } from '@prisma/client';
+import { Task } from '@/types';
 import {
   DotsHorizontalIcon,
   Pencil2Icon,

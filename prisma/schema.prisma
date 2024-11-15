@@ -18,7 +18,7 @@ model Task {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   title       String
   description String
-  tags        String
+  tags        Tag[]
   priority    String
   status      Status   @default(TO_DO)
   isFutured   Boolean  @default(true)
@@ -30,6 +30,15 @@ model Task {
   // author      User      @relation(fields: [authorId], references: [id])
   // authorId    String    @db.ObjectId
   // comments    Comment[]
+}
+
+model Tag {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  value  String
+  label  String
+  color  String
+  task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  taskId String @db.ObjectId
 }
 
 // model User {

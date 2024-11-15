@@ -1,16 +1,15 @@
 'use client';
 
-import { useModalStore } from '@/stores';
-import { PlusIcon } from '@radix-ui/react-icons';
-
-import { TaskList } from '../TaskList';
+import { TaskList } from '@/components/TaskList';
 import {
   Button,
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '../ui';
+} from '@/components/ui';
+import { useModalStore } from '@/stores';
+import { PlusIcon } from '@radix-ui/react-icons';
 
 interface ColumnProps {
   title: string;

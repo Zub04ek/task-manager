@@ -14,12 +14,13 @@ interface TaskMutationProps extends ValuesType {
 }
 
 const updateTask = async (task: TaskMutationProps) => {
-  // try {
-  const res = await axios.put(`/api/tasks/${task.id}`, task);
-  return res.data;
-  // } catch (error) {
-  // console.log('error updating :>> ', error);
-  // }
+  try {
+    const res = await axios.put(`/api/tasks/${task.id}`, task);
+    return res.data;
+  } catch (error) {
+    console.log('error updating :>> ', error);
+    throw error;
+  }
 };
 
 export const useEditTask = () => {

@@ -3,10 +3,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { ExitIcon } from '@radix-ui/react-icons';
-
-import { MobileNav } from '../MobileNav';
-import { ModeToggle } from '../ModeToggle';
+import { MobileNav } from '@/components/MobileNav';
+import { ModeToggle } from '@/components/ModeToggle';
 import {
   Button,
   buttonVariants,
@@ -14,7 +12,8 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '../ui';
+} from '@/components/ui';
+import { ExitIcon } from '@radix-ui/react-icons';
 
 export function Header() {
   return (

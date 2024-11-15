@@ -2,12 +2,11 @@
 
 import { useCallback, useEffect, useState } from 'react';
 
+import { EditorImageBlock } from '@/components/EditorImageBlock';
 import { EditorLinkPopover } from '@/components/EditorLinkPopover';
 import { ToolbarButton } from '@/components/ToolbarButton';
 import { HSLToHex, RGBToHex, toolOptions } from '@/utils';
 import { type Editor } from '@tiptap/react';
-
-import { EditorImageBlock } from '../EditorImageBlock';
 
 interface ToolBarProps {
   editor: Editor;

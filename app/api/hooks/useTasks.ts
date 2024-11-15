@@ -2,8 +2,9 @@
 
 import axios from 'axios';
 
-import { Task } from '@prisma/client';
+// import { Task } from '@prisma/client';
 import { useQuery, type UseQueryOptions } from '@tanstack/react-query';
+import { Task } from '@/types';
 
 const getTasks = async () => {
   try {

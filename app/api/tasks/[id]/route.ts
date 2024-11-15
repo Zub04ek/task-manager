@@ -18,9 +18,15 @@ export async function PUT(req: NextRequest) {
       data: {
         title,
         description,
-        tags,
         priority,
         status,
+        tags: {
+          deleteMany: {},
+          create: tags,
+        },
+      },
+      include: {
+        tags: true,
       },
     });
 

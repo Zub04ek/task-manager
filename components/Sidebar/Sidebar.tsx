@@ -1,9 +1,8 @@
 'use client';
 
+import { NavLink } from '@/components/NavLink';
 import { cn } from '@/lib/utils';
 import menu from '@/utils/menu';
-
-import { NavLink } from '../NavLink';
 
 interface NavProps {
   className?: string;

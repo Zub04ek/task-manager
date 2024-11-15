@@ -2,9 +2,7 @@
 
 import React from 'react';
 
-import { HamburgerMenuIcon } from '@radix-ui/react-icons';
-
-import { Sidebar } from '../Sidebar';
+import { Sidebar } from '@/components/Sidebar';
 import {
   Button,
   Sheet,
@@ -12,7 +10,8 @@ import {
   SheetContent,
   SheetTitle,
   SheetTrigger,
-} from '../ui';
+} from '@/components/ui';
+import { HamburgerMenuIcon } from '@radix-ui/react-icons';
 
 export function MobileNav() {
   return (
