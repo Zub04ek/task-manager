@@ -240,7 +240,7 @@ const MultipleSelector = React.forwardRef<
     ref: React.Ref<MultipleSelectorRef>
   ) => {
     const inputRef = React.useRef<HTMLInputElement>(null);
-    const [open, setOpen] = React.useState(true);
+    const [open, setOpen] = React.useState(false);
     const [onScrollbar, setOnScrollbar] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(false);
     const dropdownRef = React.useRef<HTMLDivElement>(null); // Added this
@@ -264,14 +264,13 @@ const MultipleSelector = React.forwardRef<
     );
 
     const toggleTag = (tag: Option) => {
-      setSelected((prev) => {
-        const isAlreadySelected = selected.some((t) => t.value === tag.value);
-        return !isAlreadySelected
-          ? [...prev, tag]
-          : prev.filter((t) => t.value !== tag.value);
-      });
-      // onChange?.(newOptions);
-      //   inputRef?.current?.focus();
+      const isAlreadySelected = selected.some((t) => t.value === tag.value);
+      const newTags = !isAlreadySelected
+        ? [...selected, tag]
+        : selected.filter((t) => t.value !== tag.value);
+      setSelected(newTags);
+      onChange?.(newTags);
+      inputRef?.current?.focus();
     };
 
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {

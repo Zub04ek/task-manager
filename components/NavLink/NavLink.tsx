@@ -4,7 +4,7 @@ import { JSX } from 'react';
 import Link, { LinkProps } from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import { buttonVariants } from '../ui';
+import { buttonVariants } from '@/components/ui';
 
 interface NavLinkProps extends LinkProps {
   href: string;

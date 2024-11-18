@@ -1,4 +1,3 @@
-// import * as React from 'react';
 import { useCallback, useState } from 'react';
 import type { VariantProps } from 'class-variance-authority';
 import { Link } from 'lucide-react';
@@ -12,8 +11,6 @@ import {
 } from '@/components/ui/popover';
 import type { toggleVariants } from '@/components/ui/toggle';
 import type { Editor } from '@tiptap/react';
-
-// import { LinkEditBlock } from './link-edit-block';
 
 interface EditorLinkPopoverProps extends VariantProps<typeof toggleVariants> {
   editor: Editor;

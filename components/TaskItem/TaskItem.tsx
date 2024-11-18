@@ -1,11 +1,10 @@
 'use client';
 
+import { OptionsDropdown } from '@/components/OptionsDropdown';
 import { cn } from '@/lib/utils';
 import { useModalStore } from '@/stores';
 import { useSelectedTask } from '@/stores/SelectedTaskStore';
-import { Task } from '@prisma/client';
-
-import { OptionsDropdown } from '../OptionsDropdown';
+import { Task } from '@/types';
 
 interface TaskProps {
   task: Task;

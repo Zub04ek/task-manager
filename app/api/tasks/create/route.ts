@@ -28,11 +28,13 @@ export async function POST(req: NextRequest) {
     }
 
     const task = await prisma.task.create({
-      data: <Task>{
+      data: {
         title,
         description,
-        tags,
         priority,
+        tags: {
+          create: tags,
+        },
       },
     });
 

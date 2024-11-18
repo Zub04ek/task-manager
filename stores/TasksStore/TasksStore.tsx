@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-import { Task } from '@prisma/client';
+import { Task } from '@/types';
 
 interface useTasksProps {
   tasks: Task[];
@@ -9,5 +9,5 @@ interface useTasksProps {
 
 export const useTasksStore = create<useTasksProps>((set) => ({
   tasks: [],
-  setTasks: (tasks) => set({ tasks }),
+  setTasks: (tasks: Task[]) => set({ tasks }),
 }));

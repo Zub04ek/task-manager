@@ -1,8 +1,7 @@
 'use client';
 
+import { TaskItem } from '@/components/TaskItem';
 import { useTasksStore } from '@/stores/TasksStore';
-
-import { TaskItem } from '../TaskItem';
 
 interface TaskListProps {
   status: string;

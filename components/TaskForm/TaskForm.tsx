@@ -26,8 +26,9 @@ import {
 } from '@/components/ui';
 import MultipleSelector, { Option } from '@/components/ui/multiple-selector';
 import { useModalStore, useSelectedTask } from '@/stores';
+import { Task } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Status, Task } from '@prisma/client';
+import { Status } from '@prisma/client';
 
 const extractTextFromHTML = (html: string) => {
   const parser = new DOMParser();
@@ -56,6 +57,7 @@ const OPTIONS: Option[] = [
 const optionSchema = z.object({
   label: z.string(),
   value: z.string(),
+  color: z.string(),
 });
 
 export const formSchema = z.object({
@@ -95,8 +97,8 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
       title: initialData?.title || '',
       // test: '',
       description: initialData?.description || '',
-      tags: [],
-      priority: initialData?.tags || 'low',
+      tags: initialData?.tags || [],
+      priority: initialData?.priority || 'low',
       status: initialData?.status || Status.TO_DO,
     },
   });
@@ -127,7 +129,7 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
     } else if (initialData !== null) {
       form.setValue('title', initialData?.title);
       form.setValue('description', initialData?.description);
-      form.setValue('tags', []);
+      form.setValue('tags', initialData?.tags);
       form.setValue('priority', initialData?.priority);
       form.setValue('status', initialData?.status);
     }
@@ -228,6 +230,7 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
                         no results found.
                       </p>
                     }
+                    onChange={(value) => field.onChange(value)}
                   />
                 </FormControl>
                 <FormMessage />
@@ -297,9 +300,7 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting || !isValid}>
-              {action} a task
-            </Button>
+            <Button type="submit">{action} a task</Button>
           </DialogFooter>
         </form>
       </Form>

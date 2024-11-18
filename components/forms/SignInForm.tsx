@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { GoogleSignInButton } from '@/components/GoogleSignInButton';
 import {
   Button,
   Form,
@@ -15,8 +16,6 @@ import {
   Input,
 } from '@/components/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
-
-import { GoogleSignInButton } from '../GoogleSignInButton';
 
 const formSchema = z.object({
   email: z.string().min(1, 'Email is required!').email(),

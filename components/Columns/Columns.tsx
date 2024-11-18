@@ -4,10 +4,9 @@ import { useEffect } from 'react';
 import { Loader } from 'lucide-react';
 
 import { useTasks } from '@/app/api/hooks';
+import { Column } from '@/components/Column';
+import { TaskForm } from '@/components/TaskForm';
 import { useSelectedTask, useTasksStore } from '@/stores';
-
-import { Column } from '../Column/Column';
-import { TaskForm } from '../TaskForm';
 
 export const Columns = () => {
   const selectedTask = useSelectedTask((state) => state.task);

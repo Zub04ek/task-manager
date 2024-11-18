@@ -13,6 +13,7 @@ const createTask = async (values: z.infer<typeof formSchema>) => {
     return res.data;
   } catch (error) {
     console.log('error creating :>> ', error);
+    throw error;
   }
 };
 
