@@ -9,16 +9,31 @@ import * as ToastPrimitives from '@radix-ui/react-toast';
 
 const ToastProvider = ToastPrimitives.Provider;
 
+const toastViewportVariants = cva(
+  'fixed z-[100] flex max-h-screen w-full flex-col-reverse p-4 flex-col md:max-w-[420px]',
+  {
+    variants: {
+      position: {
+        bottomRight: 'bottom-0 right-0',
+        bottomLeft: 'bottom-0 left-0',
+        topRight: 'top-0 right-0',
+        topLeft: 'top-0 left-0',
+      },
+    },
+    defaultVariants: {
+      position: 'topRight',
+    },
+  }
+);
+
 const ToastViewport = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Viewport>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Viewport>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Viewport> &
+    VariantProps<typeof toastViewportVariants>
+>(({ className, position, ...props }, ref) => (
   <ToastPrimitives.Viewport
     ref={ref}
-    className={cn(
-      'fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]',
-      className
-    )}
+    className={cn(toastViewportVariants({ position }), className)}
     {...props}
   />
 ));

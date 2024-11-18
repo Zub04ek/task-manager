@@ -45,7 +45,10 @@ export const Column = (props: ColumnProps) => {
           </TooltipProvider>
         )}
       </div>
-      <TaskList status={status} />
+      <TaskList
+        className="flex flex-col gap-6 py-3 pr-3 lg:max-h-[667px] lg:overflow-y-auto"
+        status={status}
+      />
     </div>
   );
 };

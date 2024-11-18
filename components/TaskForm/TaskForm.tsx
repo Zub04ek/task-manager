@@ -222,7 +222,7 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
                   <MultipleSelector
                     {...field}
                     defaultOptions={OPTIONS}
-                    placeholder="Select tags you like..."
+                    placeholder="Select tags you like or type something new..."
                     hidePlaceholderWhenSelected={true}
                     creatable
                     emptyIndicator={
