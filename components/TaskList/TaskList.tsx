@@ -3,6 +3,7 @@
 import { HTMLAttributes } from 'react';
 
 import { TaskItem } from '@/components/TaskItem';
+// import { Button } from '@/components/ui';
 import { cn } from '@/lib/utils';
 import { useTasksStore } from '@/stores/TasksStore';
 
@@ -23,6 +24,13 @@ export const TaskList = ({ status, className, ...props }: TaskListProps) => {
       {filteredTasks.map((todo) => (
         <TaskItem key={todo.id} task={todo} />
       ))}
+      {/* {status === 'TO_DO' && (
+        <li className="rounded-2xl bg-background shadow-xl">
+          <Button className="h-full w-full rounded-2xl bg-background">
+            Add New Task
+          </Button>
+        </li>
+      )} */}
     </ul>
   );
 };
