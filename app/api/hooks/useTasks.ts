@@ -7,7 +7,14 @@ import { useQuery, type UseQueryOptions } from '@tanstack/react-query';
 
 const getTasks = async () => {
   try {
-    const res = await axios.get('/api/tasks');
+    const res = await axios.get(
+      '/api/tasks'
+      //   {
+      //   headers: {
+      //     'Cache-Control': 'no-cache',
+      //   },
+      // }
+    );
     return res.data;
   } catch (error) {
     console.log('error getting :>> ', error);
