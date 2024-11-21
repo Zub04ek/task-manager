@@ -13,7 +13,7 @@ export async function GET() {
     // }
 
     const tasks = await prisma.task.findMany({
-      orderBy: { createdAt: 'desc' },
+      orderBy: { updatedAt: 'desc' },
       include: {
         tags: true,
       },
