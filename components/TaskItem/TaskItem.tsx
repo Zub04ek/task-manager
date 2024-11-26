@@ -1,6 +1,8 @@
 'use client';
 
 import { OptionsDropdown } from '@/components/OptionsDropdown';
+import { Badge } from '@/components/ui';
+import { badgeStyle } from '@/components/ui/multiple-selector';
 import { cn } from '@/lib/utils';
 import { useModalStore } from '@/stores';
 import { useSelectedTask } from '@/stores/SelectedTaskStore';
@@ -37,10 +39,24 @@ export const TaskItem = ({ task }: TaskProps) => {
           </span>
         </div>
         <h3 className="line-clamp-1 text-lg font-medium">{task.title}</h3>
-        <div
+        {/* <div
           className="line-clamp-3 text-xs"
           dangerouslySetInnerHTML={{ __html: task.description }}
-        />
+        /> */}
+        <ul className="flex flex-wrap gap-1">
+          {task.tags.map((tag) => {
+            return (
+              <Badge
+                key={tag.id}
+                variant="outline"
+                style={badgeStyle(tag.color || '')}
+                className={cn('rounded-xl')}
+              >
+                {tag.label}
+              </Badge>
+            );
+          })}
+        </ul>
       </div>
     </li>
   );

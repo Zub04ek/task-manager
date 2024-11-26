@@ -296,7 +296,10 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
               type="button"
               variant="outline"
               disabled={isSubmitting}
-              onClick={taskModal.onClose}
+              onClick={() => {
+                setSelectedTask(null);
+                taskModal.onClose();
+              }}
             >
               Cancel
             </Button>
