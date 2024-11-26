@@ -92,35 +92,16 @@ export interface MultipleSelectorRef {
   reset: () => void;
 }
 
-const badgeStyle = (color: string) =>
-  //   if (color) {
-  ({
-    borderColor: `${color}20`,
-    backgroundColor: `${color}30`,
-    color,
-  });
-//   } else {
-//     const randomColor = `#${Math.floor(Math.random() * 16777215)
-//       .toString(16)
-//       .padStart(6, '0')}`;
-//     console.log('randomColor :>> ', randomColor);
-//     return {
-//       borderColor: `${randomColor}20`,
-//       backgroundColor: `${randomColor}30`,
-//       color: randomColor,
-//     };
-//   }
+export const badgeStyle = (color: string) => ({
+  borderColor: `${color}20`,
+  backgroundColor: `${color}30`,
+  color,
+});
 
 const randomColor = () => {
   return `#${Math.floor(Math.random() * 16777215)
     .toString(16)
     .padStart(6, '0')}`;
-  //   console.log('randomColor :>> ', randomColor);
-  //   return {
-  //     borderColor: `${randomColor}20`,
-  //     backgroundColor: `${randomColor}30`,
-  //     color: randomColor,
-  //   };
 };
 
 export function useDebounce<T>(value: T, delay?: number): T {

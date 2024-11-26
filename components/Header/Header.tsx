@@ -3,22 +3,20 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { MobileNav } from '@/components/MobileNav';
 import { ModeToggle } from '@/components/ModeToggle';
 import {
-  Button,
   buttonVariants,
+  SidebarTrigger,
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui';
-import { ExitIcon } from '@radix-ui/react-icons';
 
 export function Header() {
   return (
-    <header className="flex h-16 w-full items-center justify-between border-b px-6 md:px-10">
-      <Link href="/" className="p-5 pl-0">
+    <header className="flex h-16 w-full items-center justify-between border-b px-6 md:justify-end md:px-10">
+      <Link href="/" className="p-5 pl-0 md:hidden">
         <Image
           className="dark:invert"
           src="https://nextjs.org/icons/next.svg"
@@ -34,20 +32,17 @@ export function Header() {
           Sign in
         </Link>
         <div className="flex gap-3 lg:gap-4">
-          <ModeToggle />
           <TooltipProvider delayDuration={100}>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="outline" size="icon">
-                  <ExitIcon />
-                </Button>
+                <SidebarTrigger />
               </TooltipTrigger>
               <TooltipContent>
-                <p>Logout</p>
+                <p>Toggle sidebar</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-          <MobileNav />
+          <ModeToggle />
         </div>
       </div>
     </header>

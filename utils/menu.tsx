@@ -4,7 +4,7 @@ import {
   TrashIcon,
 } from '@radix-ui/react-icons';
 
-const menu = [
+export const menu = [
   {
     id: 1,
     title: 'Active',
@@ -24,5 +24,3 @@ const menu = [
     link: '/completed',
   },
 ];
-
-export default menu;
