@@ -4,9 +4,9 @@ import { OptionsDropdown } from '@/components/OptionsDropdown';
 import { Badge } from '@/components/ui';
 import { badgeStyle } from '@/components/ui/multiple-selector';
 import { cn } from '@/lib/utils';
-import { useModalStore } from '@/stores';
-import { useSelectedTask } from '@/stores/SelectedTaskStore';
+import { useModalStore, useSelectedTask } from '@/stores';
 import { Task } from '@/types';
+import { useSortable } from '@dnd-kit/sortable';
 
 interface TaskProps {
   task: Task;
@@ -16,8 +16,24 @@ export const TaskItem = ({ task }: TaskProps) => {
   const taskModal = useModalStore();
   const setSelectedTask = useSelectedTask((state) => state.setTask);
 
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: task.id });
+
+  const style = {
+    transform: transform
+      ? `translate3d(${transform.x}px, ${Math.round(
+          transform.y
+        )}px, 0) scaleX(${transform.scaleX})`
+      : '',
+    transition,
+  };
+
   return (
     <li
+      ref={setNodeRef}
+      {...listeners}
+      {...attributes}
+      style={style}
       className="relative cursor-pointer rounded-2xl bg-background p-6 shadow-xl"
       onDoubleClick={() => {
         setSelectedTask(task);
