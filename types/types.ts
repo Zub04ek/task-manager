@@ -4,6 +4,11 @@ export type Example = {
   example: boolean;
 };
 
+export type ColumnType = {
+  id: string;
+  title: string;
+};
+
 export type User = {
   id: string;
   email: string;

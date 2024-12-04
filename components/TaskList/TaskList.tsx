@@ -6,25 +6,37 @@ import { usePathname } from 'next/navigation';
 import { TaskItem } from '@/components/TaskItem';
 import { Button } from '@/components/ui';
 import { cn } from '@/lib/utils';
-import { useModalStore } from '@/stores';
-import { useTasksStore } from '@/stores/TasksStore';
+import { useModalStore, useTasksStore } from '@/stores';
+import { Task } from '@/types';
 import { PlusIcon } from '@radix-ui/react-icons';
 
 interface TaskListProps extends HTMLAttributes<HTMLUListElement> {
   status: string;
+  items?: Task[];
 }
 
-export const TaskList = ({ status, className, ...props }: TaskListProps) => {
+export const TaskList = ({
+  status,
+  items,
+  className,
+  // ...props
+}: TaskListProps) => {
   const pathname = usePathname();
   const taskModal = useModalStore();
   const allTasks = useTasksStore((state) => state.tasks);
-  const filteredTasks = allTasks.filter((todo) => todo.status === status);
+  const filteredTasks =
+    items || allTasks.filter((todo) => todo.status === status);
+
+  // const { setNodeRef } = useDroppable({
+  //   id: status,
+  // });
 
   return (
     <ul
+      // ref={setNodeRef}
       // className="flex flex-col gap-6 scroll-smooth py-3 pr-3 lg:max-h-[667px] lg:overflow-y-auto"
-      className={cn('scroll-smooth', className)}
-      {...props}
+      className={cn(className)}
+      // {...props}
     >
       {filteredTasks.map((todo) => (
         <TaskItem key={todo.id} task={todo} />
