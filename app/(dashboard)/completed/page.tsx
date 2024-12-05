@@ -3,7 +3,7 @@ import { TasksPage } from '@/components/TasksPage';
 
 export default function Completed() {
   return (
-    <TasksPage className="grid grid-rows-[36px_1fr] gap-3 rounded-xl bg-accent p-6">
+    <TasksPage className="grid grid-rows-[36px_1fr] gap-3 rounded-xl bg-accent p-6 lg:h-full">
       <div className="flex items-center justify-between pr-3">
         <h2 className="font-semibold">Completed tasks</h2>
       </div>

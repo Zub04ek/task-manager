@@ -28,22 +28,13 @@ import MultipleSelector, { Option } from '@/components/ui/multiple-selector';
 import { useModalStore, useSelectedTask } from '@/stores';
 import { Task } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Status } from '@prisma/client';
+import { Priority, Status } from '@prisma/client';
 
 const extractTextFromHTML = (html: string) => {
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, 'text/html');
   return doc.body.textContent?.trim() || '';
 };
-
-// const TAGS = [
-//   'health',
-//   'sport',
-//   'travel',
-//   'home',
-//   'finance',
-//   'entertainment',
-// ] as const;
 
 const OPTIONS: Option[] = [
   { label: 'health', value: 'health', color: '#ef4444' },
@@ -74,9 +65,7 @@ export const formSchema = z.object({
   // tags: z.string().min(1, 'Tag is required!'),
   // tags: z.array(z.enum(TAGS)).min(1, 'Please, select at least 1 tag'),
   tags: z.array(optionSchema).min(1, 'Please, select at least 1 tag'),
-  priority: z.string({
-    required_error: 'Please select priority!',
-  }),
+  priority: z.nativeEnum(Priority),
   status: z.nativeEnum(Status),
 });
 
@@ -98,7 +87,7 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
       // test: '',
       description: initialData?.description || '',
       tags: initialData?.tags || [],
-      priority: initialData?.priority || 'low',
+      priority: initialData?.priority || Priority.MEDIUM,
       status: initialData?.status || Status.TO_DO,
     },
   });
@@ -124,7 +113,7 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
       form.setValue('title', '');
       form.setValue('description', '');
       form.setValue('tags', []);
-      form.setValue('priority', 'low');
+      form.setValue('priority', Priority.MEDIUM);
       form.setValue('status', Status.TO_DO);
     } else if (initialData !== null) {
       form.setValue('title', initialData?.title);
@@ -253,9 +242,9 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="low">Low</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="high">High</SelectItem>
+                    <SelectItem value={Priority.LOW}>Low</SelectItem>
+                    <SelectItem value={Priority.MEDIUM}>Medium</SelectItem>
+                    <SelectItem value={Priority.HIGH}>High</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />

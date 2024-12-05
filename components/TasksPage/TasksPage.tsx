@@ -44,7 +44,7 @@ const TasksPage = forwardRef<
     );
 
   return (
-    <section ref={ref} className={cn('lg:h-full', className)} {...props}>
+    <section ref={ref} className={cn(className)} {...props}>
       <TaskForm initialData={selectedTask} />
       {children}
     </section>

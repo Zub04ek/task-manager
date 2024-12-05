@@ -129,7 +129,11 @@ export const Columns = () => {
   }, [allTasks]);
 
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
@@ -184,10 +188,12 @@ export const Columns = () => {
       if (overId in items) {
         newIndex = overItems.length + 1;
       } else {
-        const isBelowOverItem =
-          over &&
-          active.rect.current.translated &&
-          active.rect.current.translated.top > over.rect.top + over.rect.height;
+        const isBelowOverItem = over && overIndex === overItems.length - 1;
+
+        // over &&
+        // active.rect.current.translated &&
+        // active.rect.current.translated.top > over.rect.top + over.rect.height;
+
         const modifier = isBelowOverItem ? 1 : 0;
         newIndex = overIndex >= 0 ? overIndex + modifier : overItems.length + 1;
       }
@@ -246,6 +252,7 @@ export const Columns = () => {
     const activeId = active.id;
     const overId = over?.id;
     if (!overId) return;
+
     const activeContainer = findContainer(activeId);
     const overContainer = findContainer(overId);
 
@@ -257,7 +264,7 @@ export const Columns = () => {
       return;
     }
 
-    const activeIndex = items[activeContainer]?.findIndex(
+    const activeIndex = items[activeContainer].findIndex(
       (item) => item.id === activeId
     );
     const overIndex = items[overContainer].findIndex(

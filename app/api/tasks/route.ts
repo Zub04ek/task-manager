@@ -13,7 +13,7 @@ export async function GET() {
     // }
 
     const tasks = await prisma.task.findMany({
-      orderBy: { updatedAt: 'desc' },
+      // orderBy: { updatedAt: 'desc' },
       include: {
         tags: true,
       },
@@ -21,6 +21,12 @@ export async function GET() {
     //   {where: {
     //     userId,
     //   },}
+
+    // await prisma.task.updateMany({
+    //   data: {
+    //     sequence: 0,
+    //   },
+    // });
 
     return NextResponse.json(tasks);
   } catch (error) {
