@@ -19,12 +19,13 @@ model Task {
   title       String
   description String
   tags        Tag[]
-  priority    String
+  priority    Priority @default(MEDIUM)
   status      Status   @default(TO_DO)
   isFutured   Boolean  @default(true)
   isCompleted Boolean  @default(false)
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
+  sequence    Int?
   // dateRange   DateRange @relation(fields: [dateRangeId], references: [id])
   // dateRangeId String    @db.ObjectId
   // author      User      @relation(fields: [authorId], references: [id])
@@ -66,4 +67,10 @@ enum Status {
   TO_DO
   IN_PROGRESS
   DONE
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
 }
