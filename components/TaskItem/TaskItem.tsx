@@ -7,25 +7,41 @@ import { cn } from '@/lib/utils';
 import { useModalStore, useSelectedTask } from '@/stores';
 import { Task } from '@/types';
 import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 interface TaskProps {
   task: Task;
+  forceDragging?: boolean;
 }
 
-export const TaskItem = ({ task }: TaskProps) => {
+export const TaskItem = ({ task, forceDragging = false }: TaskProps) => {
   const taskModal = useModalStore();
   const setSelectedTask = useSelectedTask((state) => state.setTask);
 
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: task.id });
+  const {
+    attributes,
+    isDragging,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+  } = useSortable({ id: task.id });
+
+  // const style = {
+  //   transform: transform
+  //     ? `translate3d(${transform.x}px, ${Math.round(
+  //         transform.y
+  //       )}px, 0) scaleX(${transform.scaleX})`
+  //     : '',
+  //   transition,
+  // };
 
   const style = {
-    transform: transform
-      ? `translate3d(${transform.x}px, ${Math.round(
-          transform.y
-        )}px, 0) scaleX(${transform.scaleX})`
-      : '',
-    transition,
+    transform: CSS.Transform.toString(transform),
+    transition: transition || undefined,
+    opacity: isDragging ? '0.4' : '1',
+    lineHeight: '4',
+    cursor: isDragging || forceDragging ? 'grabbing' : 'grab',
   };
 
   return (
@@ -53,6 +69,7 @@ export const TaskItem = ({ task }: TaskProps) => {
           <span className="text-[8px] font-medium uppercase text-muted-foreground">
             {task.status}
           </span>
+          <span className="leading-8">{task.sequence}</span>
         </div>
         <h3 className="line-clamp-1 text-lg font-medium">{task.title}</h3>
         {/* <div

@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from 'react';
 
-// import { useEditTask } from '@/app/api/hooks';
+import { useUpdateTask } from '@/app/api/hooks';
 import { Column } from '@/components/Column';
+import { useToast } from '@/hooks';
 import { useTasksStore } from '@/stores';
 import { ColumnType, Task } from '@/types';
 import {
@@ -11,7 +12,6 @@ import {
   DndContext,
   DragEndEvent,
   DragOverEvent,
-  // DragOverlay,
   DragStartEvent,
   KeyboardSensor,
   PointerSensor,
@@ -20,78 +20,7 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
-
-// import { TaskItem } from '../TaskItem';
-
-// export const Columns = () => {
-//   const selectedTask = useSelectedTask((state) => state.task);
-//   const setAllTasks = useTasksStore((state) => state.setTasks);
-
-//   const { data: allTasks, isPending, error } = useTasks();
-
-//   useEffect(() => {
-//     if (allTasks) {
-//       setAllTasks(allTasks);
-//     }
-//   }, [allTasks]);
-
-//   if (isPending)
-//     return (
-//       <div className="flex h-full items-center justify-center">
-//         <Loader className="size-6 animate-spin text-muted-foreground" />
-//       </div>
-//     );
-
-//   if (error)
-//     return (
-//       <div className="grid h-full place-content-center px-4">
-//         <div className="text-center">
-//           <h1>Oops, something went wrong!</h1>
-//           <h2 className="text-sm font-medium text-muted-foreground">
-//             {error.message}
-//           </h2>
-//         </div>
-//       </div>
-//     );
-
-//   return (
-//     <section className="grid h-full gap-6 lg:grid-cols-3">
-//       <TaskForm initialData={selectedTask} />
-//       <Column title="To do" status="TO_DO" />
-//       <Column title="In progress" status="IN_PROGRESS" />
-//       <Column title="Done" status="DONE" />
-//     </section>
-//   );
-// };
-
-// const defaultAnnouncements = {
-//   onDragStart(id) {
-//     console.log(`Picked up draggable item ${id}.`);
-//   },
-//   onDragOver(id, overId) {
-//     if (overId) {
-//       console.log(
-//         `Draggable item ${id} was moved over droppable area ${overId}.`
-//       );
-//       return;
-//     }
-
-//     console.log(`Draggable item ${id} is no longer over a droppable area.`);
-//   },
-//   onDragEnd(id, overId) {
-//     if (overId) {
-//       console.log(
-//         `Draggable item ${id} was dropped over droppable area ${overId}`
-//       );
-//       return;
-//     }
-
-//     console.log(`Draggable item ${id} was dropped.`);
-//   },
-//   onDragCancel(id) {
-//     console.log(`Dragging was cancelled. Draggable item ${id} was dropped.`);
-//   },
-// };
+import { useQueryClient } from '@tanstack/react-query';
 
 const COLUMNS: ColumnType[] = [
   { id: 'TO_DO', title: 'To do' },
@@ -99,31 +28,54 @@ const COLUMNS: ColumnType[] = [
   { id: 'DONE', title: 'Done' },
 ];
 
-// type ColumnsType = {
-//   TO_DO: Task[];
-//   IN_PROGRESS: Task[];
-//   DONE: Task[];
-// };
-
 export const Columns = () => {
-  const allTasks = useTasksStore((state) => state.tasks);
-
   const [items, setItems] = useState<Record<string, Task[]>>({
     TO_DO: [],
     IN_PROGRESS: [],
     DONE: [],
   });
-  const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
-
-  // const setAllTasks = useTasksStore((state) => state.setTasks);
-  // const { mutate: editTaskMutate } = useEditTask();
+  const [activeTask, setActiveTask] = useState<Task>();
+  const allTasks = useTasksStore((state) => state.tasks);
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const { mutate: updateTaskMutate } = useUpdateTask();
+  const mutateOptions = {
+    onSuccess: () => {
+      toast({ description: 'Tasks are updated successfully!' });
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey: ['tasks'] }),
+  };
 
   useEffect(() => {
     if (allTasks) {
       setItems({
-        TO_DO: allTasks.filter((task) => task.status === 'TO_DO'),
-        IN_PROGRESS: allTasks.filter((task) => task.status === 'IN_PROGRESS'),
-        DONE: allTasks.filter((task) => task.status === 'DONE'),
+        TO_DO: allTasks
+          .filter((task) => task.status === 'TO_DO')
+          .sort((a, b) => {
+            if (a.sequence !== null && b.sequence !== null) {
+              return a.sequence - b.sequence;
+            } else {
+              return 0;
+            }
+          }),
+        IN_PROGRESS: allTasks
+          .filter((task) => task.status === 'IN_PROGRESS')
+          .sort((a, b) => {
+            if (a.sequence !== null && b.sequence !== null) {
+              return a.sequence - b.sequence;
+            } else {
+              return 0;
+            }
+          }),
+        DONE: allTasks
+          .filter((task) => task.status === 'DONE')
+          .sort((a, b) => {
+            if (a.sequence !== null && b.sequence !== null) {
+              return a.sequence - b.sequence;
+            } else {
+              return 0;
+            }
+          }),
       });
     }
   }, [allTasks]);
@@ -139,7 +91,9 @@ export const Columns = () => {
     })
   );
 
-  function findContainer(id: UniqueIdentifier) {
+  function findContainer(
+    id: UniqueIdentifier
+  ): string | UniqueIdentifier | undefined {
     if (id in items) {
       return id;
     }
@@ -151,20 +105,15 @@ export const Columns = () => {
 
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
-    setActiveId(active.id);
+    setActiveTask(allTasks.find((task) => task.id === active.id));
   };
 
   function handleDragOver(event: DragOverEvent) {
     const { active, over } = event;
-    const { id } = active;
-
-    // const { id: overId } = over;
-
-    const overId = over?.id;
-    if (!overId) return;
+    if (!over?.id) return;
 
     // Find the containers
-    const activeContainer = findContainer(id);
+    const activeContainer = findContainer(active.id);
     const overContainer = findContainer(over.id);
 
     if (
@@ -181,22 +130,26 @@ export const Columns = () => {
 
       // Find the indexes for the items
       const activeIndex = activeItems?.findIndex(
-        (item) => item.id === activeId
+        (item) => item.id === active.id
       );
-      const overIndex = overItems?.findIndex((item) => item.id === overId);
+      const overIndex = overItems?.findIndex((item) => item.id === over.id);
+
       let newIndex: number;
-      if (overId in items) {
+      if (over.id in items) {
+        // We're at the root droppable of a container
         newIndex = overItems.length + 1;
       } else {
-        const isBelowOverItem = over && overIndex === overItems.length - 1;
-
-        // over &&
-        // active.rect.current.translated &&
-        // active.rect.current.translated.top > over.rect.top + over.rect.height;
+        const isBelowOverItem =
+          over &&
+          overIndex === overItems.length - 1 &&
+          active.rect.current.translated &&
+          active.rect.current.translated.top > over.rect.top + over.rect.height;
+        // or over.rect.offsetTop
 
         const modifier = isBelowOverItem ? 1 : 0;
         newIndex = overIndex >= 0 ? overIndex + modifier : overItems.length + 1;
       }
+
       return {
         ...items,
         [activeContainer]: items[activeContainer].filter(
@@ -209,52 +162,16 @@ export const Columns = () => {
         ],
       };
     });
-
-    // setItems((prev) => {
-    //   const activeItems = prev[activeContainer];
-    //   const overItems = prev[overContainer];
-
-    //   // Find the indexes for the items
-    //   const activeIndex = activeItems.indexOf(id);
-    //   const overIndex = overItems.indexOf(overId);
-
-    //   let newIndex;
-    //   if (overId in prev) {
-    //     // We're at the root droppable of a container
-    //     newIndex = overItems.length + 1;
-    //   } else {
-    //     const isBelowLastItem =
-    //       over &&
-    //       overIndex === overItems.length - 1 &&
-    //       draggingRect.offsetTop > over.rect.offsetTop + over.rect.height;
-
-    //     const modifier = isBelowLastItem ? 1 : 0;
-
-    //     newIndex = overIndex >= 0 ? overIndex + modifier : overItems.length + 1;
-    //   }
-
-    //   return {
-    //     ...prev,
-    //     [activeContainer]: [
-    //       ...prev[activeContainer].filter((item) => item !== active.id),
-    //     ],
-    //     [overContainer]: [
-    //       ...prev[overContainer].slice(0, newIndex),
-    //       items[activeContainer][activeIndex],
-    //       ...prev[overContainer].slice(newIndex, prev[overContainer].length),
-    //     ],
-    //   };
-    // });
   }
 
   const handleDragEnd = (event: DragEndEvent) => {
+    console.log('handleDragEnd');
     const { active, over } = event;
-    const activeId = active.id;
     const overId = over?.id;
-    if (!overId) return;
+    if (!over?.id) return;
 
-    const activeContainer = findContainer(activeId);
-    const overContainer = findContainer(overId);
+    const activeContainer = findContainer(active.id);
+    const overContainer = findContainer(over.id);
 
     if (
       !activeContainer ||
@@ -264,47 +181,64 @@ export const Columns = () => {
       return;
     }
 
+    if (activeTask && activeTask?.status !== overContainer) {
+      items[activeTask.status].forEach((task, index) => {
+        if (task.sequence !== index) {
+          updateTaskMutate({ id: task.id, sequence: index }, mutateOptions);
+          console.log('mutate in dragend active');
+        }
+        return task;
+      });
+    }
+
     const activeIndex = items[activeContainer].findIndex(
-      (item) => item.id === activeId
+      (item) => item.id === active.id
     );
     const overIndex = items[overContainer].findIndex(
       (item) => item.id === overId
     );
 
     if (activeIndex !== overIndex) {
+      const updatedArray = arrayMove(
+        items[overContainer],
+        activeIndex,
+        overIndex
+      );
+      updatedArray.forEach((task, index) => {
+        if (task.sequence !== index || task.status !== overContainer) {
+          updateTaskMutate(
+            {
+              id: task.id,
+              sequence: index,
+              status: overContainer,
+            },
+            mutateOptions
+          );
+          console.log('mutate in dragEnd');
+        }
+        return task;
+      });
       setItems((items) => ({
         ...items,
-        [overContainer]: arrayMove(
-          items[overContainer],
-          activeIndex,
-          overIndex
-        ),
+        [overContainer]: updatedArray,
       }));
+    } else {
+      items[overContainer].forEach((task, index) => {
+        if (task.sequence !== index || task.status !== overContainer) {
+          updateTaskMutate(
+            {
+              id: task.id,
+              sequence: index,
+              status: overContainer,
+            },
+            mutateOptions
+          );
+          console.log('mutate in dragend new');
+        }
+        return task;
+      });
     }
-    setActiveId(null);
-
-    // if (!over) return;
-    // const taskId = active.id as string;
-    // const newStatus = over.id as Task['status'];
-    // const updatedTasks = allTasks.map((task) =>
-    //   task.id === taskId
-    //     ? {
-    //         ...task,
-    //         status: newStatus,
-    //       }
-    //     : task
-    // );
-    // setAllTasks(updatedTasks);
-
-    // const task = { id: taskId, status: newStatus };
-    //   editTaskMutate(task);
   };
-
-  // const activeTask = useMemo(() => {
-  //   if (activeId) {
-  //     return allTasks.find((task) => task.id === activeId);
-  //   }
-  // }, [activeId]);
 
   return (
     <DndContext
@@ -324,21 +258,6 @@ export const Columns = () => {
           />
         );
       })}
-
-      {/* <Column title="To do" status="TO_DO" items={items.TO_DO} />
-      <Column
-        title="In progress"
-        status="IN_PROGRESS"
-        items={items.IN_PROGRESS}
-      />
-      <Column title="Done" status="DONE" items={items.DONE} /> */}
-
-      {/* </SortableContext> */}
-      {/* ); */}
-      {/* })} */}
-      {/* <DragOverlay>
-        {activeId ? <TaskItem task={activeTask} /> : null}
-      </DragOverlay> */}
     </DndContext>
   );
 };
