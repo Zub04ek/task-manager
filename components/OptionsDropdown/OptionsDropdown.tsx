@@ -93,7 +93,7 @@ export const OptionsDropdown = ({ task }: OptionsDropdownProps) => {
 
         <DropdownMenuContent>
           <DropdownMenuItem
-            className="gap-2"
+            className="cursor-pointer gap-2"
             onClick={() => {
               setSelectedTask(task);
               taskModal.onOpen();
@@ -103,7 +103,7 @@ export const OptionsDropdown = ({ task }: OptionsDropdownProps) => {
             <Pencil2Icon /> Edit
           </DropdownMenuItem>
           <DropdownMenuItem
-            className="gap-2"
+            className="cursor-pointer gap-2"
             onClick={() => {
               setIsAlertModalOpen(true);
               setIsDropdownMenuOpen(false);

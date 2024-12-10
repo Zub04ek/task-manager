@@ -13,7 +13,6 @@ const TasksPage = forwardRef<
   ComponentPropsWithoutRef<'section'>
 >(({ className, children, ...props }, ref) => {
   const selectedTask = useSelectedTask((state) => state.task);
-  //   const tasks = useTasksStore((state) => state.tasks);
   const setAllTasks = useTasksStore((state) => state.setTasks);
 
   const { data: allTasks, isPending, error } = useTasks();

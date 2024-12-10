@@ -13,12 +13,12 @@ interface TaskMutationProps extends ValuesType {
   id: string;
 }
 
-const updateTask = async (task: TaskMutationProps) => {
+const editTask = async (task: TaskMutationProps) => {
   try {
     const res = await axios.put(`/api/tasks/${task.id}`, task);
     return res.data;
   } catch (error) {
-    console.log('error updating :>> ', error);
+    console.log('error editing :>> ', error);
     throw error;
   }
 };
@@ -28,7 +28,7 @@ export const useEditTask = () => {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: updateTask,
+    mutationFn: editTask,
     onError: (error) => {
       toast({
         variant: 'destructive',
