@@ -5,7 +5,8 @@ import prisma from '@/lib/prisma';
 export async function PUT(req: NextRequest) {
   try {
     // const { userId } = auth();
-    const { id, title, description, tags, priority, status } = await req.json();
+    const { id, title, description, tags, priority, status, sequence } =
+      await req.json();
 
     // if (!userId) {
     //   return NextResponse.json({ error: "Unauthorized", status: 401 });
@@ -20,6 +21,7 @@ export async function PUT(req: NextRequest) {
         description,
         priority,
         status,
+        sequence,
         tags: {
           deleteMany: {},
           create: tags,

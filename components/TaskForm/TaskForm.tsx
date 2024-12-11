@@ -4,7 +4,7 @@ import { FC, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useAddTask, useEditTask } from '@/app/api/hooks';
+import { useAddTask, useEditTask, useUpdateTask } from '@/app/api/hooks';
 import { Modal } from '@/components/Modal';
 import { TiptapEditor } from '@/components/TiptapEditor';
 import {
@@ -22,13 +22,14 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-  // Textarea,
 } from '@/components/ui';
 import MultipleSelector, { Option } from '@/components/ui/multiple-selector';
-import { useModalStore, useSelectedTask } from '@/stores';
+import { useToast } from '@/hooks';
+import { useModalStore, useSelectedTask, useTasksStore } from '@/stores';
 import { Task } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Priority, Status } from '@prisma/client';
+import { useQueryClient } from '@tanstack/react-query';
 
 const extractTextFromHTML = (html: string) => {
   const parser = new DOMParser();
@@ -61,12 +62,10 @@ export const formSchema = z.object({
       message: 'The text must be at least 5 characters long after trimming',
     }
   ),
-  // description: z.string().min(1, 'Description is required!'),
-  // tags: z.string().min(1, 'Tag is required!'),
-  // tags: z.array(z.enum(TAGS)).min(1, 'Please, select at least 1 tag'),
   tags: z.array(optionSchema).min(1, 'Please, select at least 1 tag'),
   priority: z.nativeEnum(Priority),
   status: z.nativeEnum(Status),
+  sequence: z.number().int(),
 });
 
 interface AddTaskFormProps {
@@ -75,20 +74,30 @@ interface AddTaskFormProps {
 
 export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
   const taskModal = useModalStore();
+  const allTasks = useTasksStore((state) => state.tasks);
   const selectedTask = useSelectedTask((state) => state.task);
   const setSelectedTask = useSelectedTask((state) => state.setTask);
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
   const { mutate: addTaskMutate } = useAddTask();
   const { mutate: editTaskMutate } = useEditTask();
+  const { mutate: updateTaskMutate } = useUpdateTask();
+  const mutateOptions = {
+    onSuccess: () => {
+      toast({ description: 'Tasks are updated successfully!' });
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey: ['tasks'] }),
+  };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: initialData?.title || '',
-      // test: '',
       description: initialData?.description || '',
       tags: initialData?.tags || [],
       priority: initialData?.priority || Priority.MEDIUM,
       status: initialData?.status || Status.TO_DO,
+      sequence: initialData?.sequence || 0,
     },
   });
   const { isSubmitting, isValid } = form.formState;
@@ -98,11 +107,45 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     if (initialData) {
-      const task = { id: initialData.id, ...values };
+      let updatedTaskSequence = initialData.sequence;
+      console.log('updatedTaskSequence1 :>> ', updatedTaskSequence);
+      if (initialData.status !== values.status) {
+        updatedTaskSequence =
+          allTasks
+            .filter((task) => task.status === values.status)
+            .reduce((acc, value) => {
+              return (acc = acc > value.sequence ? acc : value.sequence);
+            }, 0) + 1;
+        console.log('updatedTaskSequence2 :>> ', updatedTaskSequence);
+        allTasks
+          .filter(
+            (task) =>
+              task.status === initialData.status && task.id !== initialData.id
+          )
+          .sort((a, b) => a.sequence - b.sequence)
+          .forEach((task, index) => {
+            if (task.sequence !== index) {
+              updateTaskMutate({ id: task.id, sequence: index }, mutateOptions);
+              console.log('mutate in form');
+            }
+            return task;
+          });
+      }
+      const task = {
+        id: initialData.id,
+        ...values,
+        sequence: updatedTaskSequence,
+      };
       editTaskMutate(task);
       setSelectedTask(null);
     } else {
-      addTaskMutate(values);
+      const taskSequence =
+        allTasks
+          .filter((task) => task.status === Status.TO_DO)
+          .reduce((acc, value) => {
+            return (acc = acc > value.sequence ? acc : value.sequence);
+          }, 0) + 1;
+      addTaskMutate({ ...values, sequence: taskSequence });
     }
     form.reset();
     taskModal.onClose();

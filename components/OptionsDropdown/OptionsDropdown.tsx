@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { useDeleteTask } from '@/app/api/hooks';
+import { useDeleteTask, useUpdateTask } from '@/app/api/hooks';
 import { AlertModal } from '@/components/AlertModal';
 import {
   Button,
@@ -11,13 +11,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui';
-import { useModalStore, useSelectedTask } from '@/stores';
+import { useToast } from '@/hooks';
+import { useModalStore, useSelectedTask, useTasksStore } from '@/stores';
 import { Task } from '@/types';
 import {
   DotsHorizontalIcon,
   Pencil2Icon,
   TrashIcon,
 } from '@radix-ui/react-icons';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface OptionsDropdownProps {
   task: Task;
@@ -28,13 +30,32 @@ export const OptionsDropdown = ({ task }: OptionsDropdownProps) => {
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
   // const [loading, setLoading] = useState(false);
   const taskModal = useModalStore();
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
   const setSelectedTask = useSelectedTask((state) => state.setTask);
-
-  const deleteTaskMutation = useDeleteTask();
+  const allTasks = useTasksStore((state) => state.tasks);
+  const { mutate: deleteTaskMutate } = useDeleteTask();
+  const { mutate: updateTaskMutate } = useUpdateTask();
+  const mutateOptions = {
+    onSuccess: () => {
+      toast({ description: 'Tasks are updated successfully!' });
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey: ['tasks'] }),
+  };
 
   const onDeleteTask = (taskId: string) => {
-    deleteTaskMutation.mutate(taskId);
+    deleteTaskMutate(taskId);
     setIsAlertModalOpen(false);
+    allTasks
+      .filter((item) => item.status === task.status && item.id !== task.id)
+      .sort((a, b) => a.sequence - b.sequence)
+      .forEach((task, index) => {
+        if (task.sequence !== index) {
+          updateTaskMutate({ id: task.id, sequence: index }, mutateOptions);
+          console.log('mutate in delete');
+        }
+        return task;
+      });
     // try {
     //   setLoading(true);
     //   const res = await axios.delete(`/api/tasks/${taskId}`);
