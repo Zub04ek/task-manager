@@ -34,12 +34,20 @@ export const OptionsDropdown = ({ task }: OptionsDropdownProps) => {
   const { toast } = useToast();
   const setSelectedTask = useSelectedTask((state) => state.setTask);
   const allTasks = useTasksStore((state) => state.tasks);
-  const { mutate: deleteTaskMutate } = useDeleteTask();
+  const { mutate: deleteTaskMutate } = useDeleteTask({
+    onError: (error) => {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: error.message,
+      });
+    },
+    onSuccess: () => {
+      toast({ description: 'Task deleted successfully!' });
+    },
+  });
   const { mutate: updateTaskMutate } = useUpdateTask();
   const mutateOptions = {
-    onSuccess: () => {
-      toast({ description: 'Tasks are updated successfully!' });
-    },
     onSettled: () => queryClient.invalidateQueries({ queryKey: ['tasks'] }),
   };
 

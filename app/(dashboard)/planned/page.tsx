@@ -8,7 +8,7 @@ export default function Planned() {
         <h2 className="font-semibold">Planned tasks</h2>
       </div>
       <TaskList
-        className="grid gap-6 overflow-y-auto [grid-auto-rows:152px] sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+        className="grid gap-6 overflow-y-auto [grid-auto-rows:20vh] sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
         status="TO_DO"
       />
     </TasksPage>
