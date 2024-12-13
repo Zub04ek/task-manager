@@ -6,21 +6,21 @@ import { usePathname } from 'next/navigation';
 import { TaskItem } from '@/components/TaskItem';
 import { Button } from '@/components/ui';
 import { cn } from '@/lib/utils';
-import { useModalStore, useTasksStore } from '@/stores';
+import { useModalStore } from '@/stores';
 import { Task } from '@/types';
 import { PlusIcon } from '@radix-ui/react-icons';
 
 interface TaskListProps extends HTMLAttributes<HTMLUListElement> {
-  status: string;
-  items?: Task[];
+  // status: string;
+  items: Task[];
 }
 
-export const TaskList = ({ status, items, className }: TaskListProps) => {
+export const TaskList = ({ items, className }: TaskListProps) => {
   const pathname = usePathname();
   const taskModal = useModalStore();
-  const allTasks = useTasksStore((state) => state.tasks);
-  const filteredTasks =
-    items || allTasks.filter((todo) => todo.status === status);
+  // const allTasks = useTasksStore((state) => state.tasks);
+  // const filteredTasks =
+  //   items || allTasks.filter((todo) => todo.status === status);
 
   // const { setNodeRef } = useDroppable({
   //   id: status,
@@ -31,7 +31,7 @@ export const TaskList = ({ status, items, className }: TaskListProps) => {
       // ref={setNodeRef}
       className={cn(className)}
     >
-      {filteredTasks.map((todo) => (
+      {items.map((todo) => (
         <TaskItem key={todo.id} task={todo} />
       ))}
       {pathname === '/planned' && (
