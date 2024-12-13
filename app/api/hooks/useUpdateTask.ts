@@ -2,9 +2,8 @@
 
 import axios from 'axios';
 
-import { useToast } from '@/hooks';
 import { UniqueIdentifier } from '@dnd-kit/core';
-import { useMutation } from '@tanstack/react-query';
+import { MutationOptions, useMutation } from '@tanstack/react-query';
 
 interface TaskMutationProps {
   id: string;
@@ -22,18 +21,12 @@ const updateTask = async (task: TaskMutationProps) => {
   }
 };
 
-export const useUpdateTask = () => {
-  // const queryClient = useQueryClient();
-  const { toast } = useToast();
-
+export const useUpdateTask = (
+  options?: MutationOptions<unknown, Error, TaskMutationProps>
+) => {
   return useMutation({
-    mutationFn: updateTask,
-    onError: (error) => {
-      toast({
-        variant: 'destructive',
-        title: 'Uh oh! Something went wrong.',
-        description: error.message,
-      });
-    },
+    mutationKey: ['updateTask'],
+    mutationFn: (params: TaskMutationProps) => updateTask(params),
+    ...options,
   });
 };

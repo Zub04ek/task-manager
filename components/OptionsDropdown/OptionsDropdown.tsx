@@ -48,6 +48,13 @@ export const OptionsDropdown = ({ task }: OptionsDropdownProps) => {
   });
   const { mutate: updateTaskMutate } = useUpdateTask();
   const mutateOptions = {
+    onError: (error: Error) => {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: error.message,
+      });
+    },
     onSettled: () => queryClient.invalidateQueries({ queryKey: ['tasks'] }),
   };
 

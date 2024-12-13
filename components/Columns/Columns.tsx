@@ -41,6 +41,13 @@ export const Columns = () => {
   const { toast } = useToast();
   const { mutate: updateTaskMutate, isPending } = useUpdateTask();
   const mutateOptions = {
+    onError: (error: Error) => {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: error.message,
+      });
+    },
     onSuccess: () => {
       toast({ description: 'Tasks are updated successfully!' });
     },
@@ -176,7 +183,7 @@ export const Columns = () => {
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    const overId = over?.id;
+    // const overId = over?.id;
     if (!over?.id) return;
 
     const activeContainer = findContainer(active.id);
@@ -204,7 +211,7 @@ export const Columns = () => {
       (item) => item.id === active.id
     );
     const overIndex = items[overContainer].findIndex(
-      (item) => item.id === overId
+      (item) => item.id === over.id
     );
 
     if (activeIndex !== overIndex) {

@@ -19,21 +19,6 @@ const getTasks = async () => {
   } catch (error) {
     console.log('error getting :>> ', error);
     throw error;
-    // if (axios.isAxiosError(error)) {
-    //   throw error;
-    //   // toast({
-    //   //   variant: 'destructive',
-    //   //   title: 'Uh oh! Something went wrong.',
-    //   //   description: error.message,
-    //   // });
-    // } else if (error instanceof Error) {
-    //   throw new Error(error.message);
-    //   // toast({
-    //   //   variant: 'destructive',
-    //   //   title: 'Uh oh! Something went wrong.',
-    //   //   description: error.message,
-    //   // });
-    // }
   }
 };
 

@@ -66,7 +66,7 @@ export const Column = (props: ColumnProps) => {
         </div>
         <TaskList
           className="flex flex-col gap-6 py-3 pr-3"
-          status={status}
+          // status={status}
           items={items}
         />
       </div>
