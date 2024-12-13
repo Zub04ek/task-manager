@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { Loader } from 'lucide-react';
 
 import { useUpdateTask } from '@/app/api/hooks';
 import { Column } from '@/components/Column';
@@ -38,7 +39,7 @@ export const Columns = () => {
   const allTasks = useTasksStore((state) => state.tasks);
   const queryClient = useQueryClient();
   const { toast } = useToast();
-  const { mutate: updateTaskMutate } = useUpdateTask();
+  const { mutate: updateTaskMutate, isPending } = useUpdateTask();
   const mutateOptions = {
     onSuccess: () => {
       toast({ description: 'Tasks are updated successfully!' });
@@ -174,7 +175,6 @@ export const Columns = () => {
   }
 
   const handleDragEnd = (event: DragEndEvent) => {
-    console.log('handleDragEnd');
     const { active, over } = event;
     const overId = over?.id;
     if (!over?.id) return;
@@ -250,23 +250,33 @@ export const Columns = () => {
   };
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCorners}
-      onDragStart={handleDragStart}
-      onDragOver={handleDragOver}
-      onDragEnd={handleDragEnd}
-    >
-      {COLUMNS.map((column) => {
-        return (
-          <Column
-            key={column.id}
-            title={column.title}
-            status={column.id}
-            items={items[column.id]}
-          />
-        );
-      })}
-    </DndContext>
+    <>
+      {isPending && (
+        <>
+          <div className="fixed inset-0 z-50 bg-black/80"></div>
+          <div className="fixed left-[50%] top-[50%] z-50 flex min-h-screen translate-x-[-50%] translate-y-[-50%] items-center justify-center">
+            <Loader className="size-6 animate-spin text-muted-foreground" />
+          </div>
+        </>
+      )}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCorners}
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        onDragEnd={handleDragEnd}
+      >
+        {COLUMNS.map((column) => {
+          return (
+            <Column
+              key={column.id}
+              title={column.title}
+              status={column.id}
+              items={items[column.id]}
+            />
+          );
+        })}
+      </DndContext>
+    </>
   );
 };

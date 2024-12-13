@@ -2,8 +2,7 @@
 
 import axios from 'axios';
 
-import { useToast } from '@/hooks';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { MutationOptions, useMutation } from '@tanstack/react-query';
 
 const deleteTask = async (taskId: string) => {
   try {
@@ -15,22 +14,12 @@ const deleteTask = async (taskId: string) => {
   }
 };
 
-export const useDeleteTask = () => {
-  const queryClient = useQueryClient();
-  const { toast } = useToast();
-
+export const useDeleteTask = (
+  options?: MutationOptions<unknown, Error, string>
+) => {
   return useMutation({
-    mutationFn: deleteTask,
-    onError: (error) => {
-      toast({
-        variant: 'destructive',
-        title: 'Uh oh! Something went wrong.',
-        description: error.message,
-      });
-    },
-    onSuccess: () => {
-      toast({ description: 'Task deleted successfully!' });
-    },
-    onSettled: () => queryClient.invalidateQueries({ queryKey: ['tasks'] }),
+    mutationKey: ['deleteTask'],
+    mutationFn: (params: string) => deleteTask(params),
+    ...options,
   });
 };

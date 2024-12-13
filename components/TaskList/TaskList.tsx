@@ -15,12 +15,7 @@ interface TaskListProps extends HTMLAttributes<HTMLUListElement> {
   items?: Task[];
 }
 
-export const TaskList = ({
-  status,
-  items,
-  className,
-  // ...props
-}: TaskListProps) => {
+export const TaskList = ({ status, items, className }: TaskListProps) => {
   const pathname = usePathname();
   const taskModal = useModalStore();
   const allTasks = useTasksStore((state) => state.tasks);
@@ -34,9 +29,7 @@ export const TaskList = ({
   return (
     <ul
       // ref={setNodeRef}
-      // className="flex flex-col gap-6 scroll-smooth py-3 pr-3 lg:max-h-[667px] lg:overflow-y-auto"
       className={cn(className)}
-      // {...props}
     >
       {filteredTasks.map((todo) => (
         <TaskItem key={todo.id} task={todo} />

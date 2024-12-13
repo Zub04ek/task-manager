@@ -32,7 +32,7 @@ export async function PUT(req: NextRequest) {
       },
     });
 
-    return NextResponse.json(task);
+    return NextResponse.json(task, { status: 200 });
   } catch (error) {
     console.log('ERROR UPDATING TASK: ', error);
     return NextResponse.json(
@@ -60,7 +60,7 @@ export async function DELETE(
       },
     });
 
-    return NextResponse.json(task);
+    return NextResponse.json(task, { status: 200 });
   } catch (error) {
     console.log('ERROR DELETING TASK: ', error);
     return NextResponse.json(

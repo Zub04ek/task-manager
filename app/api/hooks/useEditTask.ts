@@ -4,8 +4,7 @@ import axios from 'axios';
 import { z } from 'zod';
 
 import { formSchema } from '@/components/TaskForm';
-import { useToast } from '@/hooks';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { MutationOptions, useMutation } from '@tanstack/react-query';
 
 type ValuesType = z.infer<typeof formSchema>;
 
@@ -23,23 +22,12 @@ const editTask = async (task: TaskMutationProps) => {
   }
 };
 
-export const useEditTask = () => {
-  const queryClient = useQueryClient();
-  const { toast } = useToast();
-
+export const useEditTask = (
+  options?: MutationOptions<unknown, Error, TaskMutationProps>
+) => {
   return useMutation({
-    mutationFn: editTask,
-    onError: (error) => {
-      toast({
-        variant: 'destructive',
-        title: 'Uh oh! Something went wrong.',
-        description: error.message,
-      });
-    },
-    onSuccess: (data, variables) => {
-      // queryClient.setQueryData(['tasks', { id: variables.id }], data);
-      toast({ description: 'Task is updated successfully!' });
-    },
-    onSettled: () => queryClient.invalidateQueries({ queryKey: ['tasks'] }),
+    mutationKey: ['editTask'],
+    mutationFn: (params: TaskMutationProps) => editTask(params),
+    ...options,
   });
 };

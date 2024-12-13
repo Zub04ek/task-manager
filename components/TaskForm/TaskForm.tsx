@@ -77,17 +77,6 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
   const allTasks = useTasksStore((state) => state.tasks);
   const selectedTask = useSelectedTask((state) => state.task);
   const setSelectedTask = useSelectedTask((state) => state.setTask);
-  const queryClient = useQueryClient();
-  const { toast } = useToast();
-  const { mutate: addTaskMutate } = useAddTask();
-  const { mutate: editTaskMutate } = useEditTask();
-  const { mutate: updateTaskMutate } = useUpdateTask();
-  const mutateOptions = {
-    onSuccess: () => {
-      toast({ description: 'Tasks are updated successfully!' });
-    },
-    onSettled: () => queryClient.invalidateQueries({ queryKey: ['tasks'] }),
-  };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -102,13 +91,49 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
   });
   const { isSubmitting, isValid } = form.formState;
 
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const mutateOptions = {
+    onError: (error: Error) => {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: error.message,
+      });
+    },
+    // onSuccess: () => {
+    //   toast({
+    //     description: `Task is ${initialData ? 'updated' : 'created'} successfully!`,
+    //   });
+    // },
+    onSettled: () => queryClient.invalidateQueries({ queryKey: ['tasks'] }),
+  };
+
+  const { mutate: addTaskMutate } = useAddTask({
+    ...mutateOptions,
+    onSuccess: () => {
+      toast({
+        description: `Task is created successfully!`,
+      });
+    },
+  });
+  const { mutate: editTaskMutate } = useEditTask({
+    ...mutateOptions,
+    onSuccess: () => {
+      toast({
+        description: `Task is updated successfully!`,
+      });
+    },
+  });
+  const { mutate: updateTaskMutate } = useUpdateTask();
+
   const title = initialData ? 'Update the task' : 'Create a task';
   const action = initialData ? 'Update' : 'Create';
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     if (initialData) {
       let updatedTaskSequence = initialData.sequence;
-      console.log('updatedTaskSequence1 :>> ', updatedTaskSequence);
+
       if (initialData.status !== values.status) {
         updatedTaskSequence =
           allTasks
@@ -116,7 +141,7 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
             .reduce((acc, value) => {
               return (acc = acc > value.sequence ? acc : value.sequence);
             }, 0) + 1;
-        console.log('updatedTaskSequence2 :>> ', updatedTaskSequence);
+
         allTasks
           .filter(
             (task) =>
@@ -125,7 +150,7 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
           .sort((a, b) => a.sequence - b.sequence)
           .forEach((task, index) => {
             if (task.sequence !== index) {
-              updateTaskMutate({ id: task.id, sequence: index }, mutateOptions);
+              updateTaskMutate({ id: task.id, sequence: index });
               console.log('mutate in form');
             }
             return task;
@@ -210,40 +235,6 @@ export const TaskForm: FC<AddTaskFormProps> = ({ initialData }) => {
               </FormItem>
             )}
           />
-          {/* <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Description</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Give a little bit more details"
-                    className="resize-none"
-                    rows={5}
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          /> */}
-          {/* <FormField
-            control={form.control}
-            name="tags"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Tags</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="e.g. development, design, home"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          /> */}
           <FormField
             control={form.control}
             name="tags"

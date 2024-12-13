@@ -4,8 +4,7 @@ import axios from 'axios';
 import { z } from 'zod';
 
 import { formSchema } from '@/components/TaskForm';
-import { useToast } from '@/hooks';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { MutationOptions, useMutation } from '@tanstack/react-query';
 
 const createTask = async (values: z.infer<typeof formSchema>) => {
   try {
@@ -17,28 +16,12 @@ const createTask = async (values: z.infer<typeof formSchema>) => {
   }
 };
 
-export const useAddTask = () =>
-  //   options?: Omit<
-  //     UseMutationOptions<Task>,
-  //     'mutationFn' | 'onError' | 'onSuccess' | 'onSettled'
-  //   >
-  {
-    const queryClient = useQueryClient();
-    const { toast } = useToast();
-
-    return useMutation({
-      mutationFn: createTask,
-      onError: (error) => {
-        toast({
-          variant: 'destructive',
-          title: 'Uh oh! Something went wrong.',
-          description: error.message,
-        });
-      },
-      onSuccess: () => {
-        toast({ description: 'Task is created successfully!' });
-      },
-      onSettled: () => queryClient.invalidateQueries({ queryKey: ['tasks'] }),
-      //   ...options,
-    });
-  };
+export const useAddTask = (
+  options?: MutationOptions<unknown, Error, z.infer<typeof formSchema>>
+) => {
+  return useMutation({
+    mutationKey: ['createTask'],
+    mutationFn: (params: z.infer<typeof formSchema>) => createTask(params),
+    ...options,
+  });
+};

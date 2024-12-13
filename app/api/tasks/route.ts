@@ -28,7 +28,7 @@ export async function GET() {
     //   },
     // });
 
-    return NextResponse.json(tasks);
+    return NextResponse.json(tasks, { status: 200 });
   } catch (error) {
     console.log('ERROR GETTING TASKS: ', error);
     return NextResponse.json(
