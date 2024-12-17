@@ -42,12 +42,19 @@ model Tag {
   taskId String @db.ObjectId
 }
 
-// model User {
-//   id    String @id @default(auto()) @map("_id") @db.ObjectId
-//   email String @unique
-//   name  String
-//   tasks Task[]
-// }
+model User {
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  email          String    @unique
+  name           String
+  emailVerified  DateTime?
+  image          String?
+  role           UserRole  @default(USER)
+  hashedPassword String?
+  isVerfied      Boolean   @default(false)
+  token          Int?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
 
 // model Comment {
 //   id      String @id @default(auto()) @map("_id") @db.ObjectId
@@ -62,6 +69,12 @@ model Tag {
 //   to   DateTime
 //   Task Task[]
 // }
+
+enum UserRole {
+  USER
+  ADMIN
+  SUBSCRIBER
+}
 
 enum Status {
   TO_DO

@@ -1,4 +1,4 @@
-import { Tag, Task as TaskType } from '@prisma/client';
+import { Tag, Task as TaskType, User as UserType } from '@prisma/client';
 
 export type Example = {
   example: boolean;
@@ -9,12 +9,13 @@ export type ColumnType = {
   title: string;
 };
 
-export type User = {
-  id: string;
-  email: string;
-  name: string;
-  tasks: Task[];
-};
+export type User = UserType;
+// export type User = {
+//   id: string;
+//   email: string;
+//   name: string;
+//   tasks: Task[];
+// };
 
 export type Tags = {
   tags: Tag[];

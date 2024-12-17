@@ -3,7 +3,7 @@
 import { ComponentPropsWithoutRef, forwardRef, useEffect } from 'react';
 import { Loader } from 'lucide-react';
 
-import { useTasks } from '@/app/api/hooks';
+import { useTasks } from '@/app/api/hooks/task';
 import { TaskForm } from '@/components/TaskForm';
 import { cn } from '@/lib/utils';
 import { useSelectedTask, useTasksStore } from '@/stores';

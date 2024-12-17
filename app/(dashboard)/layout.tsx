@@ -7,7 +7,7 @@ import { AppSidebar } from '@/components/AppSidebar';
 import { Header } from '@/components/Header';
 import { SidebarProvider, Toaster } from '@/components/ui';
 import { cn } from '@/lib/utils';
-import { TanstackProvider, ThemeProvider } from '@/utils';
+import { AuthProvider, TanstackProvider, ThemeProvider } from '@/utils';
 
 import './globals.css';
 
@@ -39,16 +39,18 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <TanstackProvider>
-            <SidebarProvider defaultOpen={defaultOpen}>
-              <AppSidebar />
-              <div className="grid min-h-screen flex-1 grid-rows-[max-content_1fr]">
-                <Header />
-                <main className="max-h-[calc(100vh-64px)] overflow-y-auto px-8 py-10 lg:h-full">
-                  {children}
-                </main>
-              </div>
-              <Toaster />
-            </SidebarProvider>
+            <AuthProvider>
+              <SidebarProvider defaultOpen={defaultOpen}>
+                <AppSidebar />
+                <div className="grid min-h-screen flex-1 grid-rows-[max-content_1fr]">
+                  <Header />
+                  <main className="max-h-[calc(100vh-64px)] overflow-y-auto px-8 py-10 lg:h-full">
+                    {children}
+                  </main>
+                </div>
+                <Toaster />
+              </SidebarProvider>
+            </AuthProvider>
           </TanstackProvider>
         </ThemeProvider>
       </body>

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Loader } from 'lucide-react';
 
-import { useUpdateTask } from '@/app/api/hooks';
+import { useUpdateTask } from '@/app/api/hooks/task';
 import { Column } from '@/components/Column';
 import { useToast } from '@/hooks';
 import { useTasksStore } from '@/stores';

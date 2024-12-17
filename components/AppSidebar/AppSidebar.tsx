@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { signOut, useSession } from 'next-auth/react';
 
 import {
   buttonVariants,
@@ -27,6 +28,11 @@ import { ExitIcon } from '@radix-ui/react-icons';
 export const AppSidebar = () => {
   const pathname = usePathname();
   const { isMobile, state, setOpenMobile } = useSidebar();
+  const { status } = useSession();
+
+  const logoutHandler = async () => {
+    await signOut();
+  };
 
   return (
     <Sidebar collapsible="icon">
@@ -100,29 +106,34 @@ export const AppSidebar = () => {
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
-          <SidebarMenuItem>
-            <TooltipProvider delayDuration={100}>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <SidebarMenuButton
-                    asChild
-                    style={{ justifyContent: 'flex-start' }}
-                    className={`h-9 w-full gap-3 ${buttonVariants({ variant: 'ghost' })} group-data-[collapsible=icon]:!h-9`}
-                  >
-                    <Link href="/" className="flex items-center gap-3 px-4">
-                      <ExitIcon />
-                      <span>Logout</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </TooltipTrigger>
-                {state === 'collapsed' && (
-                  <TooltipContent side="right">
-                    <p>Logout</p>
-                  </TooltipContent>
-                )}
-              </Tooltip>
-            </TooltipProvider>
-          </SidebarMenuItem>
+          {status === 'authenticated' && (
+            <SidebarMenuItem>
+              <TooltipProvider delayDuration={100}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <SidebarMenuButton
+                      asChild
+                      style={{ justifyContent: 'flex-start' }}
+                      className={`h-9 w-full gap-3 ${buttonVariants({ variant: 'ghost' })} group-data-[collapsible=icon]:!h-9`}
+                    >
+                      <button
+                        onClick={logoutHandler}
+                        className="flex items-center gap-3 px-4"
+                      >
+                        <ExitIcon />
+                        <span>Logout</span>
+                      </button>
+                    </SidebarMenuButton>
+                  </TooltipTrigger>
+                  {state === 'collapsed' && (
+                    <TooltipContent side="right">
+                      <p>Logout</p>
+                    </TooltipContent>
+                  )}
+                </Tooltip>
+              </TooltipProvider>
+            </SidebarMenuItem>
+          )}
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
