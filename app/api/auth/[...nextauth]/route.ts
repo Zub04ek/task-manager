@@ -51,6 +51,9 @@ const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  pages: {
+    signIn: '/signin', // Custom sign-in page
+  },
   secret: process.env.NEXTAUTH_SECRET,
 };
 
