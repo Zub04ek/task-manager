@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt';
 import prisma from '@/lib/prisma';
 import { connectToDatabase } from '@/utils';
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',
