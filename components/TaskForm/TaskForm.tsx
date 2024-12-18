@@ -4,7 +4,7 @@ import { FC, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useAddTask, useEditTask, useUpdateTask } from '@/app/api/hooks';
+import { useAddTask, useEditTask, useUpdateTask } from '@/app/api/hooks/task';
 import { Modal } from '@/components/Modal';
 import { TiptapEditor } from '@/components/TiptapEditor';
 import {

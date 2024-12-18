@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { useAddUser } from '@/app/api/hooks/user';
 import { GoogleSignInButton } from '@/components/GoogleSignInButton';
 import {
   Button,
@@ -15,11 +16,12 @@ import {
   FormMessage,
   Input,
 } from '@/components/ui';
+import { useToast } from '@/hooks';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-const formSchema = z
+export const formSchema = z
   .object({
-    username: z.string().min(1, 'Username is required!').max(100),
+    name: z.string().min(1, 'Username is required!').max(100),
     email: z.string().min(1, 'Email is required!').email(),
     password: z.string().min(1, 'Password is required!').min(8),
     confirmPassword: z
@@ -36,15 +38,31 @@ export function SignUpForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: '',
+      name: '',
       email: '',
       password: '',
       confirmPassword: '',
     },
   });
+  const { toast } = useToast();
+  const { mutate: addUserMutate } = useAddUser({
+    onError: (error: Error) => {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: error.message,
+      });
+    },
+    onSuccess: () => {
+      toast({
+        description: `Task is created successfully!`,
+      });
+    },
+  });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+    addUserMutate(values);
     form.reset();
   }
 
@@ -56,7 +74,7 @@ export function SignUpForm() {
       >
         <FormField
           control={form.control}
-          name="username"
+          name="name"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Username</FormLabel>

@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react';
 import { Loader } from 'lucide-react';
 
-import { useUpdateTask } from '@/app/api/hooks';
+import { useUpdateTask } from '@/app/api/hooks/task';
+import { TaskList } from '@/components/TaskList';
 import { useToast } from '@/hooks';
 import { useTasksStore } from '@/stores';
 import { Task } from '@/types';
@@ -24,8 +25,6 @@ import {
 } from '@dnd-kit/sortable';
 import { Status } from '@prisma/client';
 import { useQueryClient } from '@tanstack/react-query';
-
-import { TaskList } from '../TaskList';
 
 interface TaskGridProps {
   status: Status;
@@ -62,20 +61,19 @@ export const TaskGrid = ({ status }: TaskGridProps) => {
   }, [allTasks]);
 
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(PointerSensor, {
+      // allows to click on nested DropdownMenuItem
+      activationConstraint: {
+        distance: 5,
+      },
+    }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
 
-  //   const handleDragStart = (event) => {
-  //     setActiveId(event.active.id);
-  //   };
-
   const handleDragEnd = (event: DragEndEvent) => {
-    // setActiveId(null);
     const { active, over } = event;
-    // const overId = over?.id;
     if (!over?.id) return;
 
     const oldIndex = items.findIndex((item) => item.id === active.id);
@@ -128,7 +126,6 @@ export const TaskGrid = ({ status }: TaskGridProps) => {
           </div>
           <TaskList
             className="grid gap-6 overflow-y-auto [grid-auto-rows:20vh] sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-            // status={status}
             items={items}
           />
         </SortableContext>
