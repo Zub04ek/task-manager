@@ -30,6 +30,7 @@ const COLUMNS: ColumnType[] = [
 ];
 
 export const Columns = () => {
+  console.log('Open from Mac')
   const [items, setItems] = useState<Record<string, Task[]>>({
     TO_DO: [],
     IN_PROGRESS: [],
