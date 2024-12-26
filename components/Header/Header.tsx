@@ -1,10 +1,9 @@
-'use client';
+// 'use client';
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
 
+import { auth } from '@/auth';
 import { ModeToggle } from '@/components/ModeToggle';
 import {
   buttonVariants,
@@ -15,13 +14,8 @@ import {
   TooltipTrigger,
 } from '@/components/ui';
 
-export function Header() {
-  const router = useRouter();
-  const { status } = useSession();
-
-  const loginHandler = async () => {
-    router.push('api/auth/signin');
-  };
+export const Header = async () => {
+  const session = await auth();
 
   return (
     <header className="flex h-16 w-full items-center justify-between border-b px-6 md:justify-end md:px-10">
@@ -37,13 +31,27 @@ export function Header() {
         />
       </Link>
       <div className="flex items-center gap-6">
-        {status === 'unauthenticated' && (
-          <button
-            onClick={loginHandler}
+        {!session?.user ? (
+          <Link
+            href="/signin"
+            // onClick={() => login('')}
             className={buttonVariants({ variant: 'ghost' })}
           >
             Sign in
-          </button>
+          </Link>
+        ) : (
+          <div className="flex items-center gap-x-2 text-sm">
+            {session.user.name}
+            {session.user.image && (
+              <Image
+                className="rounded-full"
+                width={30}
+                height={30}
+                src={session.user.image}
+                alt="avatar"
+              />
+            )}
+          </div>
         )}
         <div className="flex gap-3 lg:gap-4">
           <TooltipProvider delayDuration={100}>
@@ -61,4 +69,4 @@ export function Header() {
       </div>
     </header>
   );
-}
+};

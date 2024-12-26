@@ -1,7 +1,12 @@
-import React from 'react';
+import { redirect } from 'next/navigation';
 
-import { SignUpForm } from '@/components/forms';
+import { auth } from '@/auth';
+import { SignUpForm } from '@/components/auth/forms';
 
-export default function SignUp() {
+export default async function SignUp() {
+  const session = await auth();
+  if (session?.user) {
+    redirect('/');
+  }
   return <SignUpForm />;
 }

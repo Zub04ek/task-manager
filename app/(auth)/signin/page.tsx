@@ -1,15 +1,12 @@
-// 'use client';
-// import React from 'react';
-// import { getServerSession } from 'next-auth';
+import { redirect } from 'next/navigation';
 
-// import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-// import { useSession } from 'next-auth/react';
+import { auth } from '@/auth';
+import { SignInForm } from '@/components/auth/forms';
 
-import { SignInForm } from '@/components/forms';
-
-export default function SignIn() {
-  // const session = await getServerSession(authOptions);
-  // const { data } = useSession();
-  // return <main>{JSON.stringify(data)}</main>;
+export default async function SignIn() {
+  const session = await auth();
+  if (session?.user) {
+    redirect('/');
+  }
   return <SignInForm />;
 }

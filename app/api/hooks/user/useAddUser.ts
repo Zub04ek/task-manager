@@ -3,10 +3,10 @@
 import axios from 'axios';
 import { z } from 'zod';
 
-import { formSchema } from '@/components/forms/SignUpForm';
+import { registerFormSchema } from '@/components/auth/forms/SignUpForm';
 import { MutationOptions, useMutation } from '@tanstack/react-query';
 
-const createUser = async (values: z.infer<typeof formSchema>) => {
+const createUser = async (values: z.infer<typeof registerFormSchema>) => {
   try {
     const res = await axios.post('/api/auth/register', values);
     return res.data;
@@ -17,11 +17,12 @@ const createUser = async (values: z.infer<typeof formSchema>) => {
 };
 
 export const useAddUser = (
-  options?: MutationOptions<unknown, Error, z.infer<typeof formSchema>>
+  options?: MutationOptions<unknown, Error, z.infer<typeof registerFormSchema>>
 ) => {
   return useMutation({
     mutationKey: ['createUser'],
-    mutationFn: (params: z.infer<typeof formSchema>) => createUser(params),
+    mutationFn: (params: z.infer<typeof registerFormSchema>) =>
+      createUser(params),
     ...options,
   });
 };

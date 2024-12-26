@@ -2,9 +2,9 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { signOut, useSession } from 'next-auth/react';
+import { usePathname, useRouter } from 'next/navigation';
 
+import { useLogoutUser } from '@/app/api/hooks/user';
 import {
   buttonVariants,
   Sidebar,
@@ -28,10 +28,12 @@ import { ExitIcon } from '@radix-ui/react-icons';
 export const AppSidebar = () => {
   const pathname = usePathname();
   const { isMobile, state, setOpenMobile } = useSidebar();
-  const { status } = useSession();
+  const router = useRouter();
+  const { mutate: logoutUserMutate } = useLogoutUser();
 
   const logoutHandler = async () => {
-    await signOut();
+    logoutUserMutate();
+    router.push('/signin');
   };
 
   return (
@@ -106,34 +108,32 @@ export const AppSidebar = () => {
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
-          {status === 'authenticated' && (
-            <SidebarMenuItem>
-              <TooltipProvider delayDuration={100}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <SidebarMenuButton
-                      asChild
-                      style={{ justifyContent: 'flex-start' }}
-                      className={`h-9 w-full gap-3 ${buttonVariants({ variant: 'ghost' })} group-data-[collapsible=icon]:!h-9`}
+          <SidebarMenuItem>
+            <TooltipProvider delayDuration={100}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <SidebarMenuButton
+                    asChild
+                    style={{ justifyContent: 'flex-start' }}
+                    className={`h-9 w-full gap-3 ${buttonVariants({ variant: 'ghost' })} group-data-[collapsible=icon]:!h-9`}
+                  >
+                    <button
+                      onClick={logoutHandler}
+                      className="flex items-center gap-3 px-4"
                     >
-                      <button
-                        onClick={logoutHandler}
-                        className="flex items-center gap-3 px-4"
-                      >
-                        <ExitIcon />
-                        <span>Logout</span>
-                      </button>
-                    </SidebarMenuButton>
-                  </TooltipTrigger>
-                  {state === 'collapsed' && (
-                    <TooltipContent side="right">
-                      <p>Logout</p>
-                    </TooltipContent>
-                  )}
-                </Tooltip>
-              </TooltipProvider>
-            </SidebarMenuItem>
-          )}
+                      <ExitIcon />
+                      <span>Logout</span>
+                    </button>
+                  </SidebarMenuButton>
+                </TooltipTrigger>
+                {state === 'collapsed' && (
+                  <TooltipContent side="right">
+                    <p>Logout</p>
+                  </TooltipContent>
+                )}
+              </Tooltip>
+            </TooltipProvider>
+          </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
