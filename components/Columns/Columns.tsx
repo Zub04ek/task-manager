@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Loader } from 'lucide-react';
 
-import { useUpdateTask } from '@/app/api/hooks';
+import { useUpdateTask } from '@/app/api/hooks/task';
 import { Column } from '@/components/Column';
 import { useToast } from '@/hooks';
 import { useTasksStore } from '@/stores';
@@ -59,37 +59,20 @@ export const Columns = () => {
       setItems({
         TO_DO: allTasks
           .filter((task) => task.status === 'TO_DO')
-          .sort((a, b) => {
-            if (a.sequence !== null && b.sequence !== null) {
-              return a.sequence - b.sequence;
-            } else {
-              return 0;
-            }
-          }),
+          .sort((a, b) => a.sequence - b.sequence),
         IN_PROGRESS: allTasks
           .filter((task) => task.status === 'IN_PROGRESS')
-          .sort((a, b) => {
-            if (a.sequence !== null && b.sequence !== null) {
-              return a.sequence - b.sequence;
-            } else {
-              return 0;
-            }
-          }),
+          .sort((a, b) => a.sequence - b.sequence),
         DONE: allTasks
           .filter((task) => task.status === 'DONE')
-          .sort((a, b) => {
-            if (a.sequence !== null && b.sequence !== null) {
-              return a.sequence - b.sequence;
-            } else {
-              return 0;
-            }
-          }),
+          .sort((a, b) => a.sequence - b.sequence),
       });
     }
   }, [allTasks]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
+      // allows to click on nested DropdownMenuItem
       activationConstraint: {
         distance: 5,
       },

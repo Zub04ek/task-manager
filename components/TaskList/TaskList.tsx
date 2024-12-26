@@ -11,26 +11,15 @@ import { Task } from '@/types';
 import { PlusIcon } from '@radix-ui/react-icons';
 
 interface TaskListProps extends HTMLAttributes<HTMLUListElement> {
-  // status: string;
   items: Task[];
 }
 
 export const TaskList = ({ items, className }: TaskListProps) => {
   const pathname = usePathname();
   const taskModal = useModalStore();
-  // const allTasks = useTasksStore((state) => state.tasks);
-  // const filteredTasks =
-  //   items || allTasks.filter((todo) => todo.status === status);
-
-  // const { setNodeRef } = useDroppable({
-  //   id: status,
-  // });
 
   return (
-    <ul
-      // ref={setNodeRef}
-      className={cn(className)}
-    >
+    <ul className={cn(className)}>
       {items.map((todo) => (
         <TaskItem key={todo.id} task={todo} />
       ))}

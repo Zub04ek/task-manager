@@ -1,12 +1,12 @@
 import { redirect } from 'next/navigation';
 
 import { auth } from '@/auth';
-import { SignUpForm } from '@/components/auth/forms';
+import { SignInForm } from '@/components/auth/forms';
 
-export default async function SignUp() {
+export default async function SignIn() {
   const session = await auth();
   if (session?.user) {
     redirect('/');
   }
-  return <SignUpForm />;
+  return <SignInForm />;
 }

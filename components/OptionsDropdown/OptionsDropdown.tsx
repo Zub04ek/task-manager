@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { useDeleteTask, useUpdateTask } from '@/app/api/hooks';
+import { useDeleteTask, useUpdateTask } from '@/app/api/hooks/task';
 import { AlertModal } from '@/components/AlertModal';
 import {
   Button,
