@@ -1,7 +1,7 @@
 // import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { NextRequest, NextResponse } from 'next/server';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 import prisma from '@/lib/prisma';
 
