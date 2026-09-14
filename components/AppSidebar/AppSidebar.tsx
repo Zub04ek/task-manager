@@ -2,9 +2,10 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
-import { useLogoutUser } from '@/app/api/hooks/user';
+import { logout } from '@/authActions';
+// import { useLogoutUser } from '@/app/api/hooks/user';
 import {
   buttonVariants,
   Sidebar,
@@ -28,12 +29,13 @@ import { ExitIcon } from '@radix-ui/react-icons';
 export const AppSidebar = () => {
   const pathname = usePathname();
   const { isMobile, state, setOpenMobile } = useSidebar();
-  const router = useRouter();
-  const { mutate: logoutUserMutate } = useLogoutUser();
+  // const router = useRouter();
+  // const { mutate: logoutUserMutate } = useLogoutUser();
 
   const logoutHandler = async () => {
-    logoutUserMutate();
-    router.push('/signin');
+    await logout();
+    // logoutUserMutate();
+    // router.push('/signin');
   };
 
   return (
@@ -47,7 +49,7 @@ export const AppSidebar = () => {
             >
               <Link href="/" className="flex items-center gap-3 px-4">
                 <NEXTJSLogo />
-                <span>
+                {/* <span>
                   <Image
                     className="h-[revert-layer] dark:invert"
                     src="https://nextjs.org/icons/next.svg"
@@ -56,7 +58,7 @@ export const AppSidebar = () => {
                     height={20}
                     priority
                   />
-                </span>
+                </span> */}
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

@@ -2,13 +2,14 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { AxiosError } from 'axios';
+// import { useRouter } from 'next/navigation';
+// import { AxiosError } from 'axios';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useAddUser } from '@/app/api/hooks/user';
-import { FormErrorMessage, FormSuccessMessage } from '@/components/auth';
+import { register } from '@/authActions';
+// import { useAddUser } from '@/app/api/hooks/user';
+// import { FormErrorMessage, FormSuccessMessage } from '@/components/auth';
 import { AuthProviderButton } from '@/components/AuthProviderButton';
 import { CardWrapper } from '@/components/CardWrapper';
 import { GoogleIcon } from '@/components/GoogleIcon';
@@ -23,30 +24,16 @@ import {
   Input,
 } from '@/components/ui';
 import { useToast } from '@/hooks';
+import { registerFormSchema } from '@/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { GitHubLogoIcon } from '@radix-ui/react-icons';
 
-export const registerFormSchema = z
-  .object({
-    name: z.string().min(1, 'Username is required!').max(100),
-    email: z.string().min(1, 'Email is required!').email(),
-    password: z.string().min(1, 'Password is required!').min(8),
-    confirmPassword: z
-      .string()
-      .min(1, 'Password confirmation is required!')
-      .min(8),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    path: ['confirmPassword'],
-    message: 'Password do not match',
-  });
-
 export function SignUpForm() {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  // const [error, setError] = useState('');
+  // const [success, setSuccess] = useState('');
 
-  const router = useRouter();
+  // const router = useRouter();
 
   const form = useForm<z.infer<typeof registerFormSchema>>({
     resolver: zodResolver(registerFormSchema),
@@ -58,42 +45,57 @@ export function SignUpForm() {
     },
   });
   const { toast } = useToast();
-  const { mutate: addUserMutate } = useAddUser();
+  // const { mutate: addUserMutate } = useAddUser();
 
-  function onSubmit(values: z.infer<typeof registerFormSchema>) {
+  const onSubmit = async (values: z.infer<typeof registerFormSchema>) => {
     setLoading(true);
-    addUserMutate(values, {
-      onError: (error: Error | AxiosError) => {
-        setSuccess('');
-        if (
-          error instanceof AxiosError &&
-          error.response &&
-          error.response.data
-        ) {
-          setError(error.response.data.message);
-        } else {
-          setError(error.message);
-        }
-
+    register(values).then((res) => {
+      if (res.error) {
         toast({
           variant: 'destructive',
           title: 'Uh oh! Something went wrong.',
-          description: error.message,
+          description: res.error,
         });
-        setLoading(false);
-      },
-      onSuccess: () => {
-        setError('');
-        setSuccess(`Account is created successfully!`);
+      }
+      if (res.success) {
         toast({
           description: `Account is created successfully!`,
         });
-        setLoading(false);
-        router.push('/signin');
-      },
+      }
+      setLoading(false);
     });
+    // addUserMutate(values, {
+    //   onError: (error: Error | AxiosError) => {
+    //     setSuccess('');
+    //     if (
+    //       error instanceof AxiosError &&
+    //       error.response &&
+    //       error.response.data
+    //     ) {
+    //       setError(error.response.data.message);
+    //     } else {
+    //       setError(error.message);
+    //     }
+
+    //     toast({
+    //       variant: 'destructive',
+    //       title: 'Uh oh! Something went wrong.',
+    //       description: error.message,
+    //     });
+    //     setLoading(false);
+    //   },
+    //   onSuccess: () => {
+    //     setError('');
+    //     setSuccess(`Account is created successfully!`);
+    //     toast({
+    //       description: `Account is created successfully!`,
+    //     });
+    //     setLoading(false);
+    //     // router.push('/signin');
+    //   },
+    // });
     // form.reset();
-  }
+  };
 
   return (
     <CardWrapper headerLabel="Create an account" title="Sign up">
@@ -162,8 +164,8 @@ export function SignUpForm() {
               </FormItem>
             )}
           />
-          <FormSuccessMessage message={success} />
-          <FormErrorMessage message={error} />
+          {/* <FormSuccessMessage message={success} /> */}
+          {/* <FormErrorMessage message={error} /> */}
           <Button
             type="submit"
             disabled={loading}

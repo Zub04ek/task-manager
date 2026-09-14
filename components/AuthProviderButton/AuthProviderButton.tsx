@@ -1,7 +1,7 @@
 'use client';
 import { ReactNode } from 'react';
 
-import { loginWithProvider } from '@/actions/login-with-provider';
+import { loginWithProvider } from '@/authActions';
 import { Button, ButtonProps } from '@/components/ui';
 import { cn } from '@/lib/utils';
 

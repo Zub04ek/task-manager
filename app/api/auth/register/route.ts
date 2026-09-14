@@ -1,4 +1,5 @@
-import { revalidatePath } from 'next/cache';
+// import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
 
@@ -32,7 +33,8 @@ export const POST = async (req: NextRequest) => {
     const user = await prisma.user.create({
       data: { email: email.toLowerCase(), name, hashedPassword },
     });
-    revalidatePath('/');
+    redirect('/signin');
+    // revalidatePath('/');
     return NextResponse.json({ user }, { status: 201 });
   } catch (error) {
     console.log('ERROR CREATING USER: ', error);
