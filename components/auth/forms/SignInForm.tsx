@@ -46,12 +46,15 @@ export function SignInForm() {
   function onSubmit(values: z.infer<typeof loginFormSchema>) {
     setLoading(true);
     login(values).then((res) => {
+      console.log('res', res);
+      // if (res) {
       if (res.error) {
         setError(res.error);
       }
       if (res.success) {
         setSuccess(res.success);
       }
+      // }
       setLoading(false);
     });
     // loginUserMutate(values, {
