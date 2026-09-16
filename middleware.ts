@@ -5,29 +5,26 @@ import authConfig from './auth.config';
 const { auth } = NextAuth(authConfig);
 
 const privateRoutes = ['/', '/planned', '/completed'];
-const authRoutes = ['/signin', 'sign-up'];
+const authRoutes = ['/signin', '/sign-up'];
 
 export default auth(async (req) => {
   const isLoggedIn = !!req.auth;
   const { nextUrl } = req;
-  const url = process.env.AUTH_URL;
-  // const url = 'http://localhost:3000';
+
   const isPrivateRoute = privateRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
   const isApiRoute = nextUrl.pathname.includes('/api');
 
-  if (isApiRoute) {
+  if (isApiRoute || (!isLoggedIn && isAuthRoute)) {
     return;
   }
 
   if (isLoggedIn && isAuthRoute) {
-    return Response.redirect(`${url}/`);
+    return Response.redirect(new URL('/', nextUrl));
   }
-  if (!isLoggedIn && isAuthRoute) {
-    return;
-  }
+
   if (!isLoggedIn && isPrivateRoute) {
-    return Response.redirect(`${url}/signin`);
+    return Response.redirect(new URL('/signin', nextUrl));
   }
 });
 
