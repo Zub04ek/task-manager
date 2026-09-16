@@ -3,7 +3,7 @@
 import axios from 'axios';
 import { z } from 'zod';
 
-import { registerFormSchema } from '@/components/auth/forms/SignUpForm';
+import { registerFormSchema } from '@/utils';
 import { MutationOptions, useMutation } from '@tanstack/react-query';
 
 const createUser = async (values: z.infer<typeof registerFormSchema>) => {

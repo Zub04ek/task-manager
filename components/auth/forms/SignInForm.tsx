@@ -2,12 +2,13 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { AxiosError } from 'axios';
+// import { useRouter } from 'next/navigation';
+// import { AxiosError } from 'axios';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useLoginUser } from '@/app/api/hooks/user';
+import { login } from '@/authActions';
+// import { useLoginUser } from '@/app/api/hooks/user';
 import { FormErrorMessage, FormSuccessMessage } from '@/components/auth';
 import { AuthProviderButton } from '@/components/AuthProviderButton';
 import { CardWrapper } from '@/components/CardWrapper';
@@ -31,7 +32,7 @@ export function SignInForm() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  const router = useRouter();
+  // const router = useRouter();
 
   const form = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
@@ -40,31 +41,43 @@ export function SignInForm() {
       password: '',
     },
   });
-  const { mutate: loginUserMutate } = useLoginUser();
+  // const { mutate: loginUserMutate } = useLoginUser();
 
   function onSubmit(values: z.infer<typeof loginFormSchema>) {
     setLoading(true);
-    loginUserMutate(values, {
-      onError: (error: Error | AxiosError) => {
-        setSuccess('');
-        if (
-          error instanceof AxiosError &&
-          error.response &&
-          error.response.data
-        ) {
-          setError(error.response.data.message);
-        } else {
-          setError(error.message);
-        }
-        setLoading(false);
-      },
-      onSuccess: () => {
-        setError('');
-        setSuccess('User logged in successfully!');
-        setLoading(false);
-        router.push('/');
-      },
+    login(values).then((res) => {
+      console.log('res', res);
+      // if (res) {
+      if (res.error) {
+        setError(res.error);
+      }
+      if (res.success) {
+        setSuccess(res.success);
+      }
+      // }
+      setLoading(false);
     });
+    // loginUserMutate(values, {
+    //   onError: (error: Error | AxiosError) => {
+    //     setSuccess('');
+    //     if (
+    //       error instanceof AxiosError &&
+    //       error.response &&
+    //       error.response.data
+    //     ) {
+    //       setError(error.response.data.message);
+    //     } else {
+    //       setError(error.message);
+    //     }
+    //     setLoading(false);
+    //   },
+    //   onSuccess: () => {
+    //     setError('');
+    //     setSuccess('User logged in successfully!');
+    //     setLoading(false);
+    //     router.push('/');
+    //   },
+    // });
     // form.reset();
   }
 

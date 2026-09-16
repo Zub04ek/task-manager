@@ -13,6 +13,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui';
+import { NEXTJSLogo } from '@/utils';
 
 export const Header = async () => {
   const session = await auth();
@@ -20,7 +21,8 @@ export const Header = async () => {
   return (
     <header className="flex h-16 w-full items-center justify-between border-b px-6 md:justify-end md:px-10">
       <Link href="/" className="p-5 pl-0 md:hidden">
-        <Image
+        <NEXTJSLogo />
+        {/* <Image
           className="dark:invert"
           src="https://nextjs.org/icons/next.svg"
           alt="Next.js logo"
@@ -28,7 +30,7 @@ export const Header = async () => {
           height={18}
           priority
           style={{ height: 'auto' }}
-        />
+        /> */}
       </Link>
       <div className="flex items-center gap-6">
         {!session?.user ? (
