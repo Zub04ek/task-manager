@@ -13,9 +13,9 @@ export default auth(async (req) => {
 
   const isPrivateRoute = privateRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
-  const isApiRoute = nextUrl.pathname.includes('/api');
+  // const isApiRoute = nextUrl.pathname.includes('/api');
 
-  if (isApiRoute || (!isLoggedIn && isAuthRoute)) {
+  if (!isLoggedIn && isAuthRoute) {
     return;
   }
 
@@ -28,6 +28,10 @@ export default auth(async (req) => {
   }
 });
 
+// export const config = {
+//   matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
+// };
+
 export const config = {
-  matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 };
