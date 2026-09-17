@@ -2,14 +2,10 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-// import { useRouter } from 'next/navigation';
-// import { AxiosError } from 'axios';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { register } from '@/authActions';
-// import { useAddUser } from '@/app/api/hooks/user';
-// import { FormErrorMessage, FormSuccessMessage } from '@/components/auth';
 import { AuthProviderButton } from '@/components/AuthProviderButton';
 import { CardWrapper } from '@/components/CardWrapper';
 import { GoogleIcon } from '@/components/GoogleIcon';
@@ -30,10 +26,6 @@ import { GitHubLogoIcon } from '@radix-ui/react-icons';
 
 export function SignUpForm() {
   const [loading, setLoading] = useState(false);
-  // const [error, setError] = useState('');
-  // const [success, setSuccess] = useState('');
-
-  // const router = useRouter();
 
   const form = useForm<z.infer<typeof registerFormSchema>>({
     resolver: zodResolver(registerFormSchema),
@@ -45,56 +37,33 @@ export function SignUpForm() {
     },
   });
   const { toast } = useToast();
-  // const { mutate: addUserMutate } = useAddUser();
 
   const onSubmit = async (values: z.infer<typeof registerFormSchema>) => {
     setLoading(true);
-    register(values).then((res) => {
-      if (res.error) {
+    try {
+      const res = await register(values);
+      if (res?.error) {
         toast({
           variant: 'destructive',
           title: 'Uh oh! Something went wrong.',
           description: res.error,
         });
       }
-      if (res.success) {
-        toast({
-          description: `Account is created successfully!`,
-        });
-      }
+      // if (res.success) {
+      //   toast({
+      //     description: `Account is created successfully!`,
+      //   });
+      // }
       setLoading(false);
-    });
-    // addUserMutate(values, {
-    //   onError: (error: Error | AxiosError) => {
-    //     setSuccess('');
-    //     if (
-    //       error instanceof AxiosError &&
-    //       error.response &&
-    //       error.response.data
-    //     ) {
-    //       setError(error.response.data.message);
-    //     } else {
-    //       setError(error.message);
-    //     }
-
-    //     toast({
-    //       variant: 'destructive',
-    //       title: 'Uh oh! Something went wrong.',
-    //       description: error.message,
-    //     });
-    //     setLoading(false);
-    //   },
-    //   onSuccess: () => {
-    //     setError('');
-    //     setSuccess(`Account is created successfully!`);
-    //     toast({
-    //       description: `Account is created successfully!`,
-    //     });
-    //     setLoading(false);
-    //     // router.push('/signin');
-    //   },
-    // });
-    // form.reset();
+    } catch (error) {
+      console.error(error);
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: 'Something went wrong. Please try again.',
+      });
+      setLoading(false);
+    }
   };
 
   return (
