@@ -13,7 +13,6 @@ export default auth(async (req) => {
 
   const isPrivateRoute = privateRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
-  // const isApiRoute = nextUrl.pathname.includes('/api');
 
   if (!isLoggedIn && isAuthRoute) {
     return;
@@ -27,10 +26,6 @@ export default auth(async (req) => {
     return Response.redirect(new URL('/signin', nextUrl));
   }
 });
-
-// export const config = {
-//   matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
-// };
 
 export const config = {
   matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
