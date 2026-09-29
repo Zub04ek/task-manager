@@ -48,13 +48,8 @@ export function SignUpForm() {
           title: 'Uh oh! Something went wrong.',
           description: res.error,
         });
+        setLoading(false);
       }
-      // if (res.success) {
-      //   toast({
-      //     description: `Account is created successfully!`,
-      //   });
-      // }
-      setLoading(false);
     } catch (error) {
       console.error(error);
       toast({
@@ -146,22 +141,28 @@ export function SignUpForm() {
           </Button>
         </form>
       </Form>
-      <div className="mx-auto my-4 flex w-full items-center justify-evenly before:mr-4 before:block before:h-px before:flex-grow before:bg-stone-400 after:ml-4 after:block after:h-px after:flex-grow after:bg-stone-400">
+
+      {/* <div className="mx-auto my-4 flex w-full items-center justify-evenly before:mr-4 before:block before:h-px before:flex-grow before:bg-stone-400 after:ml-4 after:block after:h-px after:flex-grow after:bg-stone-400">
         or
-      </div>
-      <AuthProviderButton
+      </div> */}
+
+      {/* Sign up with Google */}
+      {/* <AuthProviderButton
         provider="google"
         icon={<GoogleIcon className="h-5 w-5" />}
       >
         <p className="text-background">Sign up with Google</p>
-      </AuthProviderButton>
-      <AuthProviderButton
+      </AuthProviderButton> */}
+
+      {/* Sign up with GitHub */}
+      {/* <AuthProviderButton
         provider="github"
         icon={<GitHubLogoIcon className="h-5 w-5" />}
         className="mt-4"
       >
         <p className="text-background">Sign up with GitHub</p>
-      </AuthProviderButton>
+      </AuthProviderButton> */}
+      
       <p className="mt-4 text-center text-sm text-gray-600">
         Already have an account?&nbsp;
         <Link className="text-blue-500 hover:underline" href="/signin">
