@@ -1,8 +1,9 @@
-'use client';
+// 'use client';
 
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { auth } from '@/auth';
 import { ModeToggle } from '@/components/ModeToggle';
 import {
   buttonVariants,
@@ -12,12 +13,16 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui';
+import { NEXTJSLogo } from '@/utils';
 
-export function Header() {
+export const Header = async () => {
+  const session = await auth();
+
   return (
     <header className="flex h-16 w-full items-center justify-between border-b px-6 md:justify-end md:px-10">
       <Link href="/" className="p-5 pl-0 md:hidden">
-        <Image
+        <NEXTJSLogo />
+        {/* <Image
           className="dark:invert"
           src="https://nextjs.org/icons/next.svg"
           alt="Next.js logo"
@@ -25,12 +30,31 @@ export function Header() {
           height={18}
           priority
           style={{ height: 'auto' }}
-        />
+        /> */}
       </Link>
       <div className="flex items-center gap-6">
-        <Link href="/sign-in" className={buttonVariants({ variant: 'ghost' })}>
-          Sign in
-        </Link>
+        {!session?.user ? (
+          <Link
+            href="/signin"
+            // onClick={() => login('')}
+            className={buttonVariants({ variant: 'ghost' })}
+          >
+            Sign in
+          </Link>
+        ) : (
+          <div className="flex items-center gap-x-2 text-sm">
+            {session.user.name}
+            {session.user.image && (
+              <Image
+                className="rounded-full"
+                width={30}
+                height={30}
+                src={session.user.image}
+                alt="avatar"
+              />
+            )}
+          </div>
+        )}
         <div className="flex gap-3 lg:gap-4">
           <TooltipProvider delayDuration={100}>
             <Tooltip>
@@ -47,4 +71,4 @@ export function Header() {
       </div>
     </header>
   );
-}
+};

@@ -1,9 +1,11 @@
 'use client';
 
-import Image from 'next/image';
+// import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+import { logout } from '@/authActions';
+// import { useLogoutUser } from '@/app/api/hooks/user';
 import {
   buttonVariants,
   Sidebar,
@@ -27,6 +29,14 @@ import { ExitIcon } from '@radix-ui/react-icons';
 export const AppSidebar = () => {
   const pathname = usePathname();
   const { isMobile, state, setOpenMobile } = useSidebar();
+  // const router = useRouter();
+  // const { mutate: logoutUserMutate } = useLogoutUser();
+
+  const logoutHandler = async () => {
+    await logout();
+    // logoutUserMutate();
+    // router.push('/signin');
+  };
 
   return (
     <Sidebar collapsible="icon">
@@ -39,7 +49,7 @@ export const AppSidebar = () => {
             >
               <Link href="/" className="flex items-center gap-3 px-4">
                 <NEXTJSLogo />
-                <span>
+                {/* <span>
                   <Image
                     className="h-[revert-layer] dark:invert"
                     src="https://nextjs.org/icons/next.svg"
@@ -48,7 +58,7 @@ export const AppSidebar = () => {
                     height={20}
                     priority
                   />
-                </span>
+                </span> */}
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -109,10 +119,13 @@ export const AppSidebar = () => {
                     style={{ justifyContent: 'flex-start' }}
                     className={`h-9 w-full gap-3 ${buttonVariants({ variant: 'ghost' })} group-data-[collapsible=icon]:!h-9`}
                   >
-                    <Link href="/" className="flex items-center gap-3 px-4">
+                    <button
+                      onClick={logoutHandler}
+                      className="flex items-center gap-3 px-4"
+                    >
                       <ExitIcon />
                       <span>Logout</span>
-                    </Link>
+                    </button>
                   </SidebarMenuButton>
                 </TooltipTrigger>
                 {state === 'collapsed' && (

@@ -1,11 +1,16 @@
 # Task Manager App
 
-Task Manager is a full-featured task management application built with modern web technologies to help users manage their tasks efficiently. This app allows users to create, update, delete, and organize tasks, providing a smooth and interactive user experience.
+Task Manager is a full-featured task management application built with modern web technologies to help users manage their tasks efficiently. Create, organize, update, and reorder tasks seamlessly through a responsive interface featuring smooth drag-and-drop interactions.
+
+> ### 🚧 Development Status
+>
+> This project is **still under active development**. Some features, UI elements, and application flows may change as the project evolves. The current implementation represents an ongoing development version rather than a final production release.
 
 ## Features
 
-- **Task Management**: Add, edit, delete, and organize tasks with a clean and intuitive UI.
 - **User Authentication**: Secure login and registration.
+- **Task Management**: Add, edit, delete, and organize tasks with a clean and intuitive UI.
+- **Drag-and-Drop**: Intuitive task reordering powered by dnd-kit.
 - **Responsive Design**: Optimized for mobile and desktop views using Tailwind CSS and Shadcn UI components.
 - **Data Persistence**: Tasks are saved in a MongoDB database via Prisma ORM.
 - **State Management**: Powered by Zustand for efficient and scalable state handling.
@@ -20,6 +25,7 @@ Task Manager is a full-featured task management application built with modern we
     - **[TanStack Query](https://tanstack.com/query/latest)** for efficient data fetching, caching, and state synchronization.
     - **[Shadcn/UI](https://shadcn.dev)** and **[TailwindCSS](https://tailwindcss.com/)** for building a modern and responsive user interface.
     - **[Zustand](https://zustand-demo.pmnd.rs/)** for lightweight and scalable state management.
+    - **[dnd-kit](https://dndkit.com/)** for drag-and-drop functionality.
 - **Backend**:
     - **[Prisma](https://www.prisma.io/)** as the ORM for database management and schema definition.
     - **[MongoDB](https://www.mongodb.com/)** for database storage.
@@ -51,6 +57,15 @@ npm install
 npm run dev
 ```
 6. Open http://localhost:3000 in your browser to see the application in action.
+
+## Demo Account
+
+A test account is available for exploring the application:
+
+Email:    testuser@mail.com \
+Password: testuser1234
+
+> The account is intended for demonstration and development purposes only.
 
 ## Usage
 
