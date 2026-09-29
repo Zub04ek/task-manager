@@ -184,7 +184,7 @@ export const Columns = () => {
       items[activeTask.status].forEach((task, index) => {
         if (task.sequence !== index) {
           updateTaskMutate({ id: task.id, sequence: index }, mutateOptions);
-          console.log('mutate in dragend active');
+          // console.log('mutate in dragend active');
         }
         return task;
       });
@@ -213,7 +213,7 @@ export const Columns = () => {
             },
             mutateOptions
           );
-          console.log('mutate in dragEnd');
+          // console.log('mutate in dragEnd');
         }
         return task;
       });
@@ -232,7 +232,7 @@ export const Columns = () => {
             },
             mutateOptions
           );
-          console.log('mutate in dragend new');
+          // console.log('mutate in dragend new');
         }
         return task;
       });

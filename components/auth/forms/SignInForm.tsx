@@ -111,22 +111,28 @@ export function SignInForm() {
           </Button>
         </form>
       </Form>
-      <div className="mx-auto my-4 flex w-full items-center justify-evenly before:mr-4 before:block before:h-px before:flex-grow before:bg-stone-400 after:ml-4 after:block after:h-px after:flex-grow after:bg-stone-400">
+
+      {/* <div className="mx-auto my-4 flex w-full items-center justify-evenly before:mr-4 before:block before:h-px before:flex-grow before:bg-stone-400 after:ml-4 after:block after:h-px after:flex-grow after:bg-stone-400">
         or
-      </div>
-      <AuthProviderButton
+      </div> */}
+
+      {/* Sign in with Google */}
+      {/* <AuthProviderButton
         provider="google"
         icon={<GoogleIcon className="h-5 w-5" />}
       >
         <p className="text-background">Sign in with Google</p>
-      </AuthProviderButton>
-      <AuthProviderButton
+      </AuthProviderButton> */}
+
+      {/* Sign in with GitHub */}
+      {/* <AuthProviderButton
         provider="github"
         icon={<GitHubLogoIcon className="h-5 w-5" />}
         className="mt-4"
       >
         <p className="text-background">Sign in with GitHub</p>
-      </AuthProviderButton>
+      </AuthProviderButton> */}
+
       <p className="mt-4 text-center text-sm text-gray-600">
         If you don&apos;t have an account, please&nbsp;
         <Link className="text-blue-500 hover:underline" href="/sign-up">
